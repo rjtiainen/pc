@@ -12,6 +12,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     sub,
     hex,
     integer,
+    empty,
     (checkFunction)0    // terminator, do not remove
 };
 
@@ -131,3 +132,24 @@ bool RPNParser::integer(RPNParser* p, QString& s) {
     return status;
 }
 
+bool RPNParser::empty(RPNParser *p, QString &s) {
+    bool status=false;
+
+    // Duplicate the topmost item in the stack
+    if(s=="") {
+        // Once again, I don't know how to do this properly in C++.
+        // Will have to switch-case all derived CalcStackItem classes in
+        // practice.
+        if(p->cstack->top()->isFloat()) {
+            // CalcStackItemFloat* i = new CalcStackItemFloat((const CalcStackItemFloat&)*p->cstack->top());
+        }
+        else {
+            CalcStackItemInt* i = new CalcStackItemInt((const CalcStackItemInt&)*p->cstack->top());
+            p->cstack->pushItem(i);
+        }
+
+        status=true;
+    }
+
+    return status;
+}

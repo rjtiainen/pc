@@ -26,7 +26,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>80</height>
+        <height>85</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -35,10 +35,21 @@
         <height>80</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>Liberation Mono</family>
+       </font>
+      </property>
      </widget>
     </item>
     <item>
-     <widget class="QListWidget" name="stackListWidget"/>
+     <widget class="QListWidget" name="stackListWidget">
+      <property name="font">
+       <font>
+        <family>Liberation Mono</family>
+       </font>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="inputEdit"/>
@@ -54,14 +65,6 @@
      <height>21</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

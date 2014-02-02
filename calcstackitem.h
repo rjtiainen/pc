@@ -15,7 +15,7 @@ class CalcStackItemInt : public CalcStackItem
 {
 public:
     typedef qlonglong sInt;     // Type for signed ints...
-    typedef qulonglong uInt;   // and unsigned
+    typedef qulonglong uInt;    // and unsigned
     CalcStackItemInt(uInt _val=0, unsigned _base=10) : CalcStackItem() {
         uval = _val;
         base = _base;

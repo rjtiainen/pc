@@ -23,6 +23,7 @@ private:
     static bool sub(RPNParser* p, QString& s);
     static bool hex(RPNParser* p, QString& s);
     static bool integer(RPNParser* p, QString& s);
+    static bool empty(RPNParser* p, QString& s);
 };
 
 #endif // RPNPARSER_H
