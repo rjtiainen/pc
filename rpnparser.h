@@ -19,6 +19,7 @@ private:
 
     // Functions for the list
     static bool clr(RPNParser* p, QString& s);
+    static bool swap(RPNParser* p, QString& s);
     static bool asmd(RPNParser* p, QString& s);
     static bool hex(RPNParser* p, QString& s);
     static bool real(RPNParser* p, QString& s);

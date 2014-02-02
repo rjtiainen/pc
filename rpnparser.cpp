@@ -8,6 +8,7 @@
 // 4. Check for valid integer
 RPNParser::checkFunction RPNParser::f[] = {
     clr,                // Clear the stack
+    swap,               // Swap the two topmost items of the stack
     asmd,               // Add, multiply, subtract, divide
     hex,                // Input hex
     real,               // Input floating point
@@ -51,13 +52,30 @@ bool RPNParser::clr(RPNParser *p, QString &s) {
     return status;
 }
 
+bool RPNParser::swap(RPNParser *p, QString &s) {
+    bool status = false;
+
+    if(s=="s") {
+        if(p->cstack->items() > 1) {
+            CalcStackItem *a,*b;
+            a = p->cstack->popItem();
+            b = p->cstack->popItem();
+            p->cstack->pushItem(a);
+            p->cstack->pushItem(b);
+            status=true;
+        }
+    }
+
+    return status;
+}
+
 bool RPNParser::asmd(RPNParser* p, QString& s) {
     bool status = false;
     CalcStackItem *a,*b,*c;
 
     if(s == "+" || s == "-" || s == "*" || s == "/") {
         // Do the math if there is enough stuff in the stack
-        if(p->cstack->items() >= 2) {
+        if(p->cstack->items() > 1) {
             status = true;
             a = p->cstack->popItem();
             b = p->cstack->popItem();
