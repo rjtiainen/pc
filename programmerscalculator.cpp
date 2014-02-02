@@ -66,19 +66,14 @@ void ProgrammersCalculator::updateDisplay(void) {
     if(calcStack->items() > 0) {
         CalcStackItem* i = calcStack->top();
         if(i->isFloat()) {
-            data.f = i->getString().toDouble();
+            data.f = i->getFloat();
         }
         // Unsigned will probably be done with later
         else if(i->isUnsigned()) {
             data.u = i->getString().toULongLong(&status, i->getBase());
         }
         else {
-            data.i = i->getString().toLongLong(&status, i->getBase());
-            // A bit of a hack. If the sign bit is 1, the conversion above duly will
-            // fail if the source is hexadecimal. We don't want that.
-            if(!status) {
-                data.i = i->getString().toULongLong(&status, i->getBase());
-            }
+            data.i = i->getInteger();
         }
         ui->radixListWidget->addItem(QString::number(data.i,10));
         ui->radixListWidget->addItem(QString::number(data.u,10));
