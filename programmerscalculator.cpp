@@ -51,8 +51,6 @@ void ProgrammersCalculator::newInput(void) {
 }
 
 void ProgrammersCalculator::updateDisplay(void) {
-    bool status;
-
     union {
         qulonglong u;
         qlonglong i;
@@ -67,10 +65,6 @@ void ProgrammersCalculator::updateDisplay(void) {
         CalcStackItem* i = calcStack->top();
         if(i->isFloat()) {
             data.f = i->getFloat();
-        }
-        // Unsigned will probably be done with later
-        else if(i->isUnsigned()) {
-            data.u = i->getString().toULongLong(&status, i->getBase());
         }
         else {
             data.i = i->getInteger();

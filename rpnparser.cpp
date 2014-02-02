@@ -7,12 +7,12 @@
 // 3. Check for decimal point
 // 4. Check for valid integer
 RPNParser::checkFunction RPNParser::f[] = {
-    clr,
-    add,
-    hex,
-    real,
-    integer,
-    empty,
+    clr,                // Clear the stack
+    asmd,               // Add, multiply, subtract, divide
+    hex,                // Input hex
+    real,               // Input floating point
+    integer,            // Input integer
+    empty,              // Duplicate head of stack
     (checkFunction)0    // terminator, do not remove
 };
 
@@ -51,7 +51,7 @@ bool RPNParser::clr(RPNParser *p, QString &s) {
     return status;
 }
 
-bool RPNParser::add(RPNParser* p, QString& s) {
+bool RPNParser::asmd(RPNParser* p, QString& s) {
     bool status = false;
     CalcStackItem *a,*b,*c;
 
@@ -74,12 +74,19 @@ bool RPNParser::add(RPNParser* p, QString& s) {
                     i = b->getInteger() * a->getInteger();
                 }
                 else {
-                    i = b->getInteger() / a->getInteger();
+                    if(a->getInteger() != 0) {
+                        i = b->getInteger() / a->getInteger();
+                    }
+                    else {
+                        status = false;
+                    }
                 }
 
-                // Which of the differing bases to choose? Pick the topmost one.
-                c = new CalcStackItemInt(i, a->getBase());
-                p->cstack->pushItem(c);
+                if(status) {
+                    // Which of the differing bases to choose? Pick the topmost one.
+                    c = new CalcStackItemInt(i, a->getBase());
+                    p->cstack->pushItem(c);
+                }
             }
             // One or the other is float, we could just as well take both as float
             // as the outcome will be float anyway. However, conversion to float from
@@ -97,16 +104,30 @@ bool RPNParser::add(RPNParser* p, QString& s) {
                     cf = b->getFloat() * a->getFloat();
                 }
                 else {
-                    cf = b->getFloat() / a->getFloat();
+                    if(a->getFloat() != 0) {
+                        cf = b->getFloat() / a->getFloat();
+                    }
+                    else {
+                        status = false;
+                    }
                 }
 
-                c = new CalcStackItemFloat(cf);
-                p->cstack->pushItem(c);
+                if(status) {
+                    c = new CalcStackItemFloat(cf);
+                    p->cstack->pushItem(c);
+                }
             }
         }
-        // a and b are gone, free the memory
-        delete a;
-        delete b;
+        if(status) {
+            // a and b are gone, free the memory
+            delete a;
+            delete b;
+        }
+        else {
+            // Could not compute, put the stuff back to the stack
+            p->cstack->pushItem(b);
+            p->cstack->pushItem(a);
+        }
     }
 
     return status;
