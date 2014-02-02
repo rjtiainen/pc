@@ -10,6 +10,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     clr,                // Clear the stack
     swap,               // Swap the two topmost items of the stack
     inv,                // Inverse
+    conv,               // Convert (hex2dex, dec2hex)
     asmd,               // Add, multiply, subtract, divide
     hex,                // Input hex
     real,               // Input floating point
@@ -91,6 +92,33 @@ bool RPNParser::inv(RPNParser *p, QString &s) {
                 delete a;
                 status = true;
             }
+        }
+    }
+
+    return status;
+}
+
+bool RPNParser::conv(RPNParser *p, QString &s) {
+    bool status=false;
+
+    if(p->cstack->items() > 0 && p->cstack->top()->isInteger()) {
+        CalcStackItem* a;
+
+        // Hex2Dec
+        if(s == "d") {
+            a = p->cstack->popItem();
+            CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 10);
+            p->cstack->pushItem(b);
+            delete a;
+            status=true;
+        }
+        // Dec2Hex
+        else if(s == "h") {
+            a = p->cstack->popItem();
+            CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 16);
+            p->cstack->pushItem(b);
+            delete a;
+            status=true;
         }
     }
 
@@ -227,7 +255,7 @@ bool RPNParser::empty(RPNParser *p, QString &s) {
     bool status=false;
 
     // Duplicate the topmost item in the stack
-    if(s=="") {
+    if(p->cstack->items() > 0 && s=="") {
         // Once again, I don't know how to do this properly in C++.
         // Will have to switch-case all derived CalcStackItem classes in
         // practice.
