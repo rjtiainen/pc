@@ -51,25 +51,30 @@ bool RPNParser::clr(RPNParser *p, QString &s) {
     return status;
 }
 
-// Int + Int = Int, Int + Float = Float, Float + Float = Float
 bool RPNParser::add(RPNParser* p, QString& s) {
     bool status = false;
     CalcStackItem *a,*b,*c;
 
-    if(s == "+" || s == "-") {
+    if(s == "+" || s == "-" || s == "*" || s == "/") {
         // Do the math if there is enough stuff in the stack
         if(p->cstack->items() >= 2) {
             status = true;
             a = p->cstack->popItem();
             b = p->cstack->popItem();
             if(a->isInteger() && b->isInteger()) {
-                qulonglong i;
+                qlonglong i;
 
                 if(s=="+") {
                     i = b->getInteger() + a->getInteger();
                 }
-                else {
+                else if(s=="-") {
                     i = b->getInteger() - a->getInteger();
+                }
+                else if(s=="*") {
+                    i = b->getInteger() * a->getInteger();
+                }
+                else {
+                    i = b->getInteger() / a->getInteger();
                 }
 
                 // Which of the differing bases to choose? Pick the topmost one.
@@ -85,8 +90,14 @@ bool RPNParser::add(RPNParser* p, QString& s) {
                 if(s=="+") {
                     cf = b->getFloat() + a->getFloat();
                 }
-                else {
+                else if(s=="-") {
                     cf = b->getFloat() - a->getFloat();
+                }
+                else if(s=="*") {
+                    cf = b->getFloat() * a->getFloat();
+                }
+                else {
+                    cf = b->getFloat() / a->getFloat();
                 }
 
                 c = new CalcStackItemFloat(cf);
@@ -100,7 +111,6 @@ bool RPNParser::add(RPNParser* p, QString& s) {
 
     return status;
 }
-
 
 bool RPNParser::hex(RPNParser *p, QString &s) {
     bool status=false;
