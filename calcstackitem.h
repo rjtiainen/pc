@@ -5,7 +5,8 @@ class CalcStackItem
 {
 public:
     virtual QString getString(void) = 0;
-    virtual bool isInteger(void) { return false; }
+    virtual bool isInteger(void) { return false; }  // Is SIGNED integer?
+    virtual bool isUnsigned(void) { return false; }
     virtual bool isFloat(void) { return false; }
     virtual unsigned getBase(void) { return 10; }
 };
@@ -13,19 +14,35 @@ public:
 class CalcStackItemInt : public CalcStackItem
 {
 public:
-    CalcStackItemInt(unsigned long _val=0, unsigned _base=10) : CalcStackItem() {
-        val = _val;
+    typedef qlonglong sInt;     // Type for signed ints...
+    typedef qulonglong uInt;   // and unsigned
+    CalcStackItemInt(uInt _val=0, unsigned _base=10) : CalcStackItem() {
+        uval = _val;
         base = _base;
+        isSigned = false;
     }
-    bool isInteger(void) { return true; }
+    CalcStackItemInt(sInt _val=0, unsigned _base=10) : CalcStackItem() {
+        sval = _val;
+        base = _base;
+        isSigned = true;
+    }
+    bool isInteger(void) { return isSigned; }
+    bool isUnsigned(void) { return !isSigned; }
     unsigned getBase(void) { return base; }
     QString getString(void) {
-        return QString::number(val);    // \todo Base etc.
+        if(isSigned) {
+            return QString::number(sval);    // \todo Base
+        }
+        else {
+            return QString::number(uval);
+        }
     }
 
 protected:
-    unsigned long val;
+    sInt sval;
+    uInt uval;
     unsigned base;
+    bool isSigned;
 };
 
 #endif // CALCSTATEITEM_H

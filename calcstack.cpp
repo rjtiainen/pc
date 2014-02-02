@@ -4,6 +4,10 @@ CalcStack::CalcStack() {
     stack.clear();
 }
 
+void CalcStack::clear(void) {
+    stack.clear();
+}
+
 bool CalcStack::pushItem(CalcStackItem* item) {
     unsigned sizeBefore = stack.size();
 
@@ -37,8 +41,9 @@ bool CalcStack::exportToStringList(QListWidget* w) {
     bool status=false;
     QList<CalcStackItem*>::iterator it;
 
+    w->clear();
+
     if(!stack.empty()) {
-        w->clear();
         it=stack.begin();
 
         while(it != stack.end()) {

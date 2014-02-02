@@ -8,6 +8,8 @@
 #include "programmerscalculator.h"
 #include "ui_programmerscalculator.h"
 
+#include <QDebug>
+
 ProgrammersCalculator::ProgrammersCalculator(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ProgrammersCalculator)
@@ -32,7 +34,7 @@ void ProgrammersCalculator::newInput(void) {
     bool status=parser->parse(ui->inputEdit->text());
 
     if(status) {
-        //ui->stackListWidget->addItem(calcStack->top()->getString());    // Replace this with get from stack
+        qDebug() << status;
         updateDisplay();
         ui->inputEdit->clear();
     }

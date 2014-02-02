@@ -12,6 +12,7 @@ class CalcStack
 
 public:
     CalcStack();
+    void clear(void);
     bool pushItem(CalcStackItem* item);
     CalcStackItem* popItem(void);               // Get an item and delete it from the stack
     CalcStackItem* top(void);                   // Get a pointer to the topmost item

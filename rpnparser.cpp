@@ -7,10 +7,12 @@
 // 3. Check for decimal point
 // 4. Check for valid integer
 RPNParser::checkFunction RPNParser::f[] = {
+    clr,
     add,
     sub,
+    hex,
     integer,
-    (checkFunction)0
+    (checkFunction)0    // terminator, do not remove
 };
 
 RPNParser::RPNParser(CalcStack* _cstack)
@@ -32,6 +34,17 @@ bool RPNParser::parse(const QString &in) {
             break;
         }
         fp++;
+    }
+
+    return status;
+}
+
+bool RPNParser::clr(RPNParser *p, QString &s) {
+    bool status = false;
+
+    if(s == "c") {
+        p->cstack->clear();
+        status=true;
     }
 
     return status;
@@ -79,9 +92,9 @@ bool RPNParser::sub(RPNParser* p, QString& s) {
             a = p->cstack->popItem();
             b = p->cstack->popItem();
             if(a->isInteger() && b->isInteger()) {
-                qlonglong i = a->getString().toLongLong(&status,a->getBase());
+                qlonglong i = b->getString().toLongLong(&status,b->getBase());
                 if(status) {
-                    i -= b->getString().toLongLong(&status,b->getBase());
+                    i -= a->getString().toLongLong(&status,a->getBase());
                 }
                 if(status) {
                     // Which of the differing bases to choose? Pick the topmost one.
@@ -98,12 +111,15 @@ bool RPNParser::sub(RPNParser* p, QString& s) {
     return status;
 }
 
+bool RPNParser::hex(RPNParser *p, QString &s) {
+    return false;
+}
 
 bool RPNParser::integer(RPNParser* p, QString& s) {
     bool status = false;
     qlonglong i = s.toLongLong(&status, 10);
 
-    qDebug() << status;    // TEST
+    //qDebug() << status;    // TEST
 
     if(status) {
         CalcStackItem* newItem;

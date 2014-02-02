@@ -18,8 +18,10 @@ private:
     static checkFunction f[];
 
     // Functions for the list
+    static bool clr(RPNParser* p, QString& s);
     static bool add(RPNParser* p, QString& s);
     static bool sub(RPNParser* p, QString& s);
+    static bool hex(RPNParser* p, QString& s);
     static bool integer(RPNParser* p, QString& s);
 };
 
