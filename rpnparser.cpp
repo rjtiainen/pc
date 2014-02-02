@@ -9,6 +9,7 @@
 RPNParser::checkFunction RPNParser::f[] = {
     clr,                // Clear the stack
     swap,               // Swap the two topmost items of the stack
+    inv,                // Inverse
     asmd,               // Add, multiply, subtract, divide
     hex,                // Input hex
     real,               // Input floating point
@@ -55,7 +56,7 @@ bool RPNParser::clr(RPNParser *p, QString &s) {
 bool RPNParser::swap(RPNParser *p, QString &s) {
     bool status = false;
 
-    if(s=="s") {
+    if(s == "s") {
         if(p->cstack->items() > 1) {
             CalcStackItem *a,*b;
             a = p->cstack->popItem();
@@ -63,6 +64,33 @@ bool RPNParser::swap(RPNParser *p, QString &s) {
             p->cstack->pushItem(a);
             p->cstack->pushItem(b);
             status=true;
+        }
+    }
+
+    return status;
+}
+
+bool RPNParser::inv(RPNParser *p, QString &s) {
+    bool status = false;
+
+    if(s == "i") {
+        CalcStackItem *a, *b;
+
+        if(p->cstack->items() > 0) {
+            if(p->cstack->top()->isInteger() && p->cstack->top()->getInteger() != 0) {
+                a = p->cstack->popItem();
+                b = new CalcStackItemInt(1/a->getInteger());
+                p->cstack->pushItem(b);
+                delete a;
+                status = true;
+            }
+            else if(p->cstack->top()->isFloat() && p->cstack->top()->getFloat() != 0.0) {
+                a = p->cstack->popItem();
+                b = new CalcStackItemFloat(1.0/a->getFloat());
+                p->cstack->pushItem(b);
+                delete a;
+                status = true;
+            }
         }
     }
 
