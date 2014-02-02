@@ -129,67 +129,64 @@ bool RPNParser::asmd(RPNParser* p, QString& s) {
     bool status = false;
     CalcStackItem *a,*b,*c;
 
-    if(s == "+" || s == "-" || s == "*" || s == "/") {
-        // Do the math if there is enough stuff in the stack
-        if(p->cstack->items() > 1) {
-            status = true;
-            a = p->cstack->popItem();
-            b = p->cstack->popItem();
-            if(a->isInteger() && b->isInteger()) {
-                qlonglong i;
+    if((p->cstack->items()) > 1 && (s == "+" || s == "-" || s == "*" || s == "/")) {
+        status = true;
+        a = p->cstack->popItem();
+        b = p->cstack->popItem();
+        if(a->isInteger() && b->isInteger()) {
+            qlonglong i;
 
-                if(s=="+") {
-                    i = b->getInteger() + a->getInteger();
-                }
-                else if(s=="-") {
-                    i = b->getInteger() - a->getInteger();
-                }
-                else if(s=="*") {
-                    i = b->getInteger() * a->getInteger();
+            if(s=="+") {
+                i = b->getInteger() + a->getInteger();
+            }
+            else if(s=="-") {
+                i = b->getInteger() - a->getInteger();
+            }
+            else if(s=="*") {
+                i = b->getInteger() * a->getInteger();
+            }
+            else {
+                if(a->getInteger() != 0) {
+                    i = b->getInteger() / a->getInteger();
                 }
                 else {
-                    if(a->getInteger() != 0) {
-                        i = b->getInteger() / a->getInteger();
-                    }
-                    else {
-                        status = false;
-                    }
-                }
-
-                if(status) {
-                    // Which of the differing bases to choose? Pick the topmost one.
-                    c = new CalcStackItemInt(i, a->getBase());
-                    p->cstack->pushItem(c);
+                    status = false;
                 }
             }
-            // One or the other is float, we could just as well take both as float
-            // as the outcome will be float anyway. However, conversion to float from
-            // hex or bin will probably fail, so we'll get the value as an integer first.
-            else {
-                qreal cf;
 
-                if(s=="+") {
-                    cf = b->getFloat() + a->getFloat();
-                }
-                else if(s=="-") {
-                    cf = b->getFloat() - a->getFloat();
-                }
-                else if(s=="*") {
-                    cf = b->getFloat() * a->getFloat();
+            if(status) {
+                // Which of the differing bases to choose? Pick the topmost one.
+                c = new CalcStackItemInt(i, a->getBase());
+                p->cstack->pushItem(c);
+            }
+        }
+        // One or the other is float, we could just as well take both as float
+        // as the outcome will be float anyway. However, conversion to float from
+        // hex or bin will probably fail, so we'll get the value as an integer first.
+        else {
+            qreal cf;
+
+            if(s=="+") {
+                cf = b->getFloat() + a->getFloat();
+            }
+            else if(s=="-") {
+                cf = b->getFloat() - a->getFloat();
+            }
+            else if(s=="*") {
+                cf = b->getFloat() * a->getFloat();
+            }
+            else {
+                if(a->getFloat() != 0) {
+                    cf = b->getFloat() / a->getFloat();
                 }
                 else {
-                    if(a->getFloat() != 0) {
-                        cf = b->getFloat() / a->getFloat();
-                    }
-                    else {
-                        status = false;
-                    }
+                    status = false;
                 }
+            }
 
-                if(status) {
-                    c = new CalcStackItemFloat(cf);
-                    p->cstack->pushItem(c);
-                }
+            if(status) {
+                c = new CalcStackItemFloat(cf);
+                p->cstack->pushItem(c);
             }
         }
         if(status) {
