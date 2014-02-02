@@ -22,6 +22,7 @@ private:
     static bool add(RPNParser* p, QString& s);
     static bool sub(RPNParser* p, QString& s);
     static bool hex(RPNParser* p, QString& s);
+    static bool real(RPNParser* p, QString& s);
     static bool integer(RPNParser* p, QString& s);
     static bool empty(RPNParser* p, QString& s);
 };

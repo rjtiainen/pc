@@ -64,8 +64,8 @@ void ProgrammersCalculator::updateDisplay(void) {
         CalcStackItem* i = calcStack->top();
         if(i->isFloat()) {
             data.f = i->getString().toDouble();
-            ui->radixListWidget->addItem(QString::number(data.f,'g',24));
-            ui->radixListWidget->addItem(QString::number(data.u, 10));  // Show the memory contents
+            //ui->radixListWidget->addItem(QString::number(data.f,'g'));
+            //ui->radixListWidget->addItem(QString::number(data.u, 10));  // Show the memory contents
             // Binary missing
         }
         else if(i->isUnsigned()) {
@@ -73,21 +73,23 @@ void ProgrammersCalculator::updateDisplay(void) {
         }
         else {
             data.i = i->getString().toLongLong(&status, i->getBase());
-            ui->radixListWidget->addItem(QString::number(data.i,10));
-            ui->radixListWidget->addItem(QString::number(data.u,10));
-            ui->radixListWidget->addItem(QString::number(data.u,16).toUpper());
-            QString str = "";
-            for(int j=(sizeof(data)-1);j>-1;j--) {
-                str.append(QString("%1").arg(data.c[j], 8, 2, QChar('0')));
-                str.append(" ");
-                if(j==4) {
-                    str.append("\n");
-                }
-            }
-            ui->radixListWidget->addItem(str);
             //ui->radixListWidget->addItem(QString("%1").arg(data.u, 8, 16, QChar('0')).toUpper());
             //ui->radixListWidget->addItem(QString::number(data.u,2));
         }
+        ui->radixListWidget->addItem(QString::number(data.i,10));
+        ui->radixListWidget->addItem(QString::number(data.u,10));
+        ui->radixListWidget->addItem(QString::number(data.u,16).toUpper());
+        QString str = "";
+        for(int j=(sizeof(data)-1);j>-1;j--) {
+            str.append(QString("%1").arg(data.c[j], 8, 2, QChar('0')));
+            str.append(" ");
+            if(j==4) {
+                str.append("\n");
+            }
+        }
+        ui->radixListWidget->addItem(str);
+        ui->radixListWidget->addItem(QString::number(data.f,'g'));
+
     }
 
 }

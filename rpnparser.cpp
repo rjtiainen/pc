@@ -11,6 +11,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     add,
     sub,
     hex,
+    real,
     integer,
     empty,
     (checkFunction)0    // terminator, do not remove
@@ -116,6 +117,21 @@ bool RPNParser::hex(RPNParser *p, QString &s) {
     return false;
 }
 
+bool RPNParser::real(RPNParser *p, QString &s) {
+    bool status=false;
+
+    // If there is exactly 1 decimal point in the number,
+    // it may be a float.
+    if(s.count('.') == 1) {
+        qreal f = s.toDouble(&status);
+        if(status) {
+            CalcStackItem* newItem = new CalcStackItemFloat(f);
+            p->cstack->pushItem(newItem);
+        }
+    }
+    return status;
+}
+
 bool RPNParser::integer(RPNParser* p, QString& s) {
     bool status = false;
     qlonglong i = s.toLongLong(&status, 10);
@@ -123,8 +139,7 @@ bool RPNParser::integer(RPNParser* p, QString& s) {
     //qDebug() << status;    // TEST
 
     if(status) {
-        CalcStackItem* newItem;
-        newItem = new CalcStackItemInt(i);
+        CalcStackItem* newItem = new CalcStackItemInt(i);
         p->cstack->pushItem(newItem);
         status = true;
     }

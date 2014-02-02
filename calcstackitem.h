@@ -45,4 +45,31 @@ protected:
     bool isSigned;
 };
 
+class CalcStackItemFloat : public CalcStackItem
+{
+public:
+    typedef qreal real;
+    CalcStackItemFloat(qreal _val=0.0) : CalcStackItem() {
+        val = _val;
+    }
+    bool isFloat(void) { return true; }
+    // We could play around with precision/format, won't do that
+    // for now (probably not needed anyway)
+    QString getString(void) {
+        QString s = QString::number(val);
+        if(!s.contains('.')) {
+            if(!s.contains('e')) {
+                s.append(".0");
+            }
+            else {
+                s = s.section('e',0,0)+".0e"+s.section('e',1,1);
+            }
+        }
+        return s;
+    }
+
+protected:
+    real val;
+};
+
 #endif // CALCSTATEITEM_H
