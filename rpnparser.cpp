@@ -9,7 +9,6 @@
 RPNParser::checkFunction RPNParser::f[] = {
     clr,
     add,
-    sub,
     hex,
     real,
     integer,
@@ -57,21 +56,56 @@ bool RPNParser::add(RPNParser* p, QString& s) {
     bool status = false;
     CalcStackItem *a,*b,*c;
 
-    if(s == "+") {
+    if(s == "+" || s == "-") {
         // Do the math if there is enough stuff in the stack
         if(p->cstack->items() >= 2) {
+            status = true;
             a = p->cstack->popItem();
             b = p->cstack->popItem();
             if(a->isInteger() && b->isInteger()) {
-                qlonglong i = a->getString().toLongLong(&status,a->getBase());
-                if(status) {
-                    i += b->getString().toLongLong(&status,b->getBase());
+                qlonglong i;
+                if(s=="+") {
+                    i = b->getString().toLongLong(&status,b->getBase())
+                            + a->getString().toLongLong(&status,a->getBase());
                 }
-                if(status) {
-                    // Which of the differing bases to choose? Pick the topmost one.
-                    c = new CalcStackItemInt(i, a->getBase());
-                    p->cstack->pushItem(c);
+                else {
+                    i = b->getString().toLongLong(&status,b->getBase())
+                            - a->getString().toLongLong(&status,a->getBase());
                 }
+
+                // Which of the differing bases to choose? Pick the topmost one.
+                c = new CalcStackItemInt(i, a->getBase());
+                p->cstack->pushItem(c);
+            }
+            // One or the other is float, we could just as well take both as float
+            // as the outcome will be float anyway. However, conversion to float from
+            // hex or bin will probably fail, so we'll get the value as an integer first.
+            else {
+                qreal af, bf, cf;
+                if(a->isInteger()) {
+                    qlonglong i = a->getString().toLongLong(&status,a->getBase());
+                    af = qreal(i);
+                }
+                else {
+                    af = a->getString().toDouble(&status);
+                }
+                if(b->isInteger()) {
+                    qlonglong i = b->getString().toLongLong(&status,b->getBase());
+                    bf = qreal(i);
+                }
+                else {
+                    bf = b->getString().toDouble(&status);
+                }
+
+                if(s=="+") {
+                    cf = bf + af;
+                }
+                else {
+                    cf = bf - af;
+                }
+
+                c = new CalcStackItemFloat(cf);
+                p->cstack->pushItem(c);
             }
         }
         // a and b are gone, free the memory
@@ -82,36 +116,6 @@ bool RPNParser::add(RPNParser* p, QString& s) {
     return status;
 }
 
-// Int + Int = Int, Int + Float = Float, Float + Float = Float
-// Works the wrong way around, fix it.
-bool RPNParser::sub(RPNParser* p, QString& s) {
-    bool status = false;
-    CalcStackItem *a,*b,*c;
-
-    if(s == "-") {
-        // Do the math if there is enough stuff in the stack
-        if(p->cstack->items() >= 2) {
-            a = p->cstack->popItem();
-            b = p->cstack->popItem();
-            if(a->isInteger() && b->isInteger()) {
-                qlonglong i = b->getString().toLongLong(&status,b->getBase());
-                if(status) {
-                    i -= a->getString().toLongLong(&status,a->getBase());
-                }
-                if(status) {
-                    // Which of the differing bases to choose? Pick the topmost one.
-                    c = new CalcStackItemInt(i, a->getBase());
-                    p->cstack->pushItem(c);
-                }
-            }
-        }
-        // a and b are gone, free the memory
-        delete a;
-        delete b;
-    }
-
-    return status;
-}
 
 bool RPNParser::hex(RPNParser *p, QString &s) {
     return false;
@@ -156,7 +160,8 @@ bool RPNParser::empty(RPNParser *p, QString &s) {
         // Will have to switch-case all derived CalcStackItem classes in
         // practice.
         if(p->cstack->top()->isFloat()) {
-            // CalcStackItemFloat* i = new CalcStackItemFloat((const CalcStackItemFloat&)*p->cstack->top());
+            CalcStackItemFloat* i = new CalcStackItemFloat((const CalcStackItemFloat&)*p->cstack->top());
+            p->cstack->pushItem(i);
         }
         else {
             CalcStackItemInt* i = new CalcStackItemInt((const CalcStackItemInt&)*p->cstack->top());

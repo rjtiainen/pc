@@ -42,8 +42,11 @@ void ProgrammersCalculator::newInput(void) {
         updateDisplay();
         ui->inputEdit->clear();
     }
+    else if(ui->inputEdit->text()==":q") {
+        qApp->exit(0);
+    }
     else {
-        ui->statusBar->showMessage("Parse error.");
+        ui->statusBar->showMessage("Error.");
     }
 }
 
@@ -64,10 +67,8 @@ void ProgrammersCalculator::updateDisplay(void) {
         CalcStackItem* i = calcStack->top();
         if(i->isFloat()) {
             data.f = i->getString().toDouble();
-            //ui->radixListWidget->addItem(QString::number(data.f,'g'));
-            //ui->radixListWidget->addItem(QString::number(data.u, 10));  // Show the memory contents
-            // Binary missing
         }
+        // Unsigned will probably be done with later
         else if(i->isUnsigned()) {
             data.u = i->getString().toULongLong(&status, i->getBase());
         }
