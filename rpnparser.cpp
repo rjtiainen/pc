@@ -63,14 +63,13 @@ bool RPNParser::add(RPNParser* p, QString& s) {
             a = p->cstack->popItem();
             b = p->cstack->popItem();
             if(a->isInteger() && b->isInteger()) {
-                qlonglong i;
+                qulonglong i;
+
                 if(s=="+") {
-                    i = b->getString().toLongLong(&status,b->getBase())
-                            + a->getString().toLongLong(&status,a->getBase());
+                    i = b->getInteger() + a->getInteger();
                 }
                 else {
-                    i = b->getString().toLongLong(&status,b->getBase())
-                            - a->getString().toLongLong(&status,a->getBase());
+                    i = b->getInteger() - a->getInteger();
                 }
 
                 // Which of the differing bases to choose? Pick the topmost one.
@@ -81,27 +80,13 @@ bool RPNParser::add(RPNParser* p, QString& s) {
             // as the outcome will be float anyway. However, conversion to float from
             // hex or bin will probably fail, so we'll get the value as an integer first.
             else {
-                qreal af, bf, cf;
-                if(a->isInteger()) {
-                    qlonglong i = a->getString().toLongLong(&status,a->getBase());
-                    af = qreal(i);
-                }
-                else {
-                    af = a->getString().toDouble(&status);
-                }
-                if(b->isInteger()) {
-                    qlonglong i = b->getString().toLongLong(&status,b->getBase());
-                    bf = qreal(i);
-                }
-                else {
-                    bf = b->getString().toDouble(&status);
-                }
+                qreal cf;
 
                 if(s=="+") {
-                    cf = bf + af;
+                    cf = b->getFloat() + a->getFloat();
                 }
                 else {
-                    cf = bf - af;
+                    cf = b->getFloat() - a->getFloat();
                 }
 
                 c = new CalcStackItemFloat(cf);
@@ -118,7 +103,18 @@ bool RPNParser::add(RPNParser* p, QString& s) {
 
 
 bool RPNParser::hex(RPNParser *p, QString &s) {
-    return false;
+    bool status=false;
+
+    // Let 0x be case sensitive, I don't like it when people write 0X
+    if(s.count() > 2 && s.startsWith("0x")) {
+        qlonglong i = s.toLongLong(&status, 16);
+        if(status) {
+            CalcStackItem* newItem = new CalcStackItemInt(i, 16);
+            p->cstack->pushItem(newItem);
+       }
+    }
+
+    return status;
 }
 
 bool RPNParser::real(RPNParser *p, QString &s) {
@@ -145,7 +141,6 @@ bool RPNParser::integer(RPNParser* p, QString& s) {
     if(status) {
         CalcStackItem* newItem = new CalcStackItemInt(i);
         p->cstack->pushItem(newItem);
-        status = true;
     }
 
     return status;

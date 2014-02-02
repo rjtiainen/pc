@@ -74,8 +74,11 @@ void ProgrammersCalculator::updateDisplay(void) {
         }
         else {
             data.i = i->getString().toLongLong(&status, i->getBase());
-            //ui->radixListWidget->addItem(QString("%1").arg(data.u, 8, 16, QChar('0')).toUpper());
-            //ui->radixListWidget->addItem(QString::number(data.u,2));
+            // A bit of a hack. If the sign bit is 1, the conversion above duly will
+            // fail if the source is hexadecimal. We don't want that.
+            if(!status) {
+                data.i = i->getString().toULongLong(&status, i->getBase());
+            }
         }
         ui->radixListWidget->addItem(QString::number(data.i,10));
         ui->radixListWidget->addItem(QString::number(data.u,10));
