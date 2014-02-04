@@ -13,7 +13,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         programmerscalculator.cpp \
     calcstack.cpp \
-    rpnparser.cpp
+    rpnparser.cpp \
+    calcstackitem.cpp
 
 HEADERS  += programmerscalculator.h \
     parser.h \

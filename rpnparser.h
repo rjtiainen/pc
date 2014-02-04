@@ -1,7 +1,7 @@
 #ifndef RPNPARSER_H
 #define RPNPARSER_H
 
-#include "QList"
+#include <QList>
 #include "parser.h"
 
 class RPNParser : public Parser

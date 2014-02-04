@@ -130,77 +130,34 @@ bool RPNParser::asmd(RPNParser* p, QString& s) {
     CalcStackItem *a,*b,*c;
 
     if((p->cstack->items()) > 1 && (s == "+" || s == "-" || s == "*" || s == "/")) {
-        status = true;
-        a = p->cstack->popItem();
         b = p->cstack->popItem();
-        if(a->isInteger() && b->isInteger()) {
-            qlonglong i;
+        a = p->cstack->popItem();
 
-            if(s=="+") {
-                i = b->getInteger() + a->getInteger();
-            }
-            else if(s=="-") {
-                i = b->getInteger() - a->getInteger();
-            }
-            else if(s=="*") {
-                i = b->getInteger() * a->getInteger();
-            }
-            else {
-                if(a->getInteger() != 0) {
-                    i = b->getInteger() / a->getInteger();
-                }
-                else {
-                    status = false;
-                }
-            }
-
-            if(status) {
-                // Which of the differing bases to choose? Pick the topmost one.
-                c = new CalcStackItemInt(i, a->getBase());
-                p->cstack->pushItem(c);
-            }
+        if(s == "+") {
+            status = CalcStackItem::add(&c,a,b);
         }
-        // One or the other is float, we could just as well take both as float
-        // as the outcome will be float anyway. However, conversion to float from
-        // hex or bin will probably fail, so we'll get the value as an integer first.
-        else {
-            qreal cf;
-
-            if(s=="+") {
-                cf = b->getFloat() + a->getFloat();
-            }
-            else if(s=="-") {
-                cf = b->getFloat() - a->getFloat();
-            }
-            else if(s=="*") {
-                cf = b->getFloat() * a->getFloat();
-            }
-            else {
-                if(a->getFloat() != 0) {
-                    cf = b->getFloat() / a->getFloat();
-                }
-                else {
-                    status = false;
-                }
-            }
-
-            if(status) {
-                c = new CalcStackItemFloat(cf);
-                p->cstack->pushItem(c);
-            }
+        else if(s == "-") {
+            status = CalcStackItem::sub(&c,a,b);
         }
+        else if(s == "*") {
+            status = CalcStackItem::mul(&c,a,b);
+        }
+        else if(s == "/") {
+            status = CalcStackItem::div(&c,a,b);
+        }
+
         if(status) {
+            p->cstack->pushItem(c);
             // a and b are gone, free the memory
             delete a;
             delete b;
         }
         else {
             // Could not compute, put the stuff back to the stack
-            p->cstack->pushItem(b);
             p->cstack->pushItem(a);
+            p->cstack->pushItem(b);
         }
     }
-
     return status;
 }
 
