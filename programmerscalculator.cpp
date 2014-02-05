@@ -18,7 +18,9 @@
 
 #include "programmerscalculator.h"
 #include "ui_programmerscalculator.h"
-
+#include <QTextEdit>
+#include <QFontMetricsF>
+#include <QFile>
 #include <QDebug>
 
 ProgrammersCalculator::ProgrammersCalculator(QWidget *parent) :
@@ -55,6 +57,10 @@ void ProgrammersCalculator::newInput(void) {
     }
     else if(ui->inputEdit->text()==":q") {
         qApp->exit(0);
+    }
+    else if(ui->inputEdit->text()==":lic") {
+        showLicense();
+        ui->inputEdit->clear();
     }
     else {
         ui->statusBar->showMessage("Error.");
@@ -93,7 +99,28 @@ void ProgrammersCalculator::updateDisplay(void) {
         }
         ui->radixListWidget->addItem(str);
         ui->radixListWidget->addItem(QString::number(data.f,'g'));
-
     }
+}
 
+// Show GPL text from the file COPYING. Installer copies
+// COPYING to the same directory as the executable.
+// todo: Write help file and use this routine to show it as well
+void ProgrammersCalculator::showLicense(void) {
+    QMainWindow* window = new QMainWindow(this);
+    QTextEdit* textEdit = new QTextEdit(window);
+    QFile* file = new QFile("COPYING");
+    file->open(QIODevice::ReadOnly);
+    QTextStream* stream = new QTextStream(file);
+    QString license = stream->readAll();
+    file->close();
+    window->setCentralWidget(textEdit);
+    window->setWindowTitle("Programmer's Calculator -- License");
+    QFont font("Monospace");
+    font.setStyleHint(QFont::TypeWriter);
+    textEdit->setFont(font);
+    textEdit->setText(license);
+    window->show();
+    // Set the window width to 80 characters + a few pixel margin
+    window->setMinimumWidth(textEdit->fontMetrics().width(QString("").leftJustified(80,'x')) + 40);
+    window->setMinimumHeight(400);
 }

@@ -37,6 +37,7 @@ public:
     
 private:
     void updateDisplay(void);
+    void showLicense(void);
     Ui::ProgrammersCalculator *ui;
     Parser* parser;
     CalcStack* calcStack;
