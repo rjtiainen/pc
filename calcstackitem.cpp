@@ -27,49 +27,66 @@ QString CalcStackItemFloat::getString(void) const {
     return s;
 }
 
-bool CalcStackItem::add(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem *b) {
+CalcStackItem* CalcStackItem::add(const CalcStackItem* a, const CalcStackItem* b, bool* status) {
+    CalcStackItem* res=0;
+
     if(a->isInteger() && b->isInteger()) {
-        *res = new CalcStackItemInt(a->getInteger()+b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()+b->getInteger());
     }
     else {
-        *res = new CalcStackItemFloat(a->getFloat()+b->getFloat());
+        res = new CalcStackItemFloat(a->getFloat()+b->getFloat());
     }
 
     // Addition always succeeds
-    return true;
+    if(status != 0) {
+        *status = true;
+    }
+
+    return res;
 }
 
-bool CalcStackItem::sub(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem *b) {
+CalcStackItem* CalcStackItem::sub(const CalcStackItem* a, const CalcStackItem* b, bool* status) {
+    CalcStackItem* res=0;
+
     if(a->isInteger() && b->isInteger()) {
-        *res = new CalcStackItemInt(a->getInteger()-b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()-b->getInteger());
     }
     else {
-        *res = new CalcStackItemFloat(a->getFloat()-b->getFloat());
+        res = new CalcStackItemFloat(a->getFloat()-b->getFloat());
     }
 
     // Subtraction always succeeds
-    return true;
+    if(status != 0) {
+        *status = true;
+    }
+
+    return res;
 }
 
-bool CalcStackItem::mul(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem *b) {
+CalcStackItem* CalcStackItem::mul(const CalcStackItem* a, const CalcStackItem* b, bool* status) {
+    CalcStackItem* res=0;
+
     if(a->isInteger() && b->isInteger()) {
-        *res = new CalcStackItemInt(a->getInteger()*b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()*b->getInteger());
     }
     else {
-        *res = new CalcStackItemFloat(a->getFloat()*b->getFloat());
+        res = new CalcStackItemFloat(a->getFloat()*b->getFloat());
     }
 
     // Multiplication always succeeds
-    return true;
+    if(status != 0) {
+        *status = true;
+    }
+
+    return res;
 }
 
-bool CalcStackItem::div(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem *b) {
-    bool status=false;
+CalcStackItem* CalcStackItem::div(const CalcStackItem* a, const CalcStackItem* b, bool* status) {
+    CalcStackItem* res=0;
 
     if(a->isInteger() && b->isInteger()) {
         if(b->getInteger()!=0) {
-            *res = new CalcStackItemInt(a->getInteger()/b->getInteger());
-            status=true;
+            res = new CalcStackItemInt(a->getInteger()/b->getInteger());
         }
     }
     else {
@@ -77,10 +94,13 @@ bool CalcStackItem::div(CalcStackItem** res, const CalcStackItem* a, const CalcS
         // Also, if for the purposes of comparison, b is not 0.0, then it shouldn't
         // be for the purposes of division, either.
         if(b->getFloat() != 0.0) {
-            *res = new CalcStackItemFloat(a->getFloat()/b->getFloat());
-            status = true;
+            res = new CalcStackItemFloat(a->getFloat()/b->getFloat());
         }
     }
 
-    return status;
+    if(status != 0) {
+        *status = (res!=0);
+    }
+
+    return res;
 }

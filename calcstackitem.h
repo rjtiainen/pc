@@ -18,10 +18,10 @@ public:
     // Basic arithmetic operators (+, -, *, /)
     // These return a new object such that integer-integer operations
     // produce integers, and anything involving a float produces a float.
-    static bool add(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem* b);
-    static bool sub(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem* b);
-    static bool mul(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem* b);
-    static bool div(CalcStackItem** res, const CalcStackItem* a, const CalcStackItem* b);
+    static CalcStackItem* add(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
+    static CalcStackItem* sub(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
+    static CalcStackItem* mul(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
+    static CalcStackItem* div(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
 };
 
 class CalcStackItemInt : public CalcStackItem
@@ -39,18 +39,6 @@ public:
     void setInteger(qlonglong val) { this->sval = val; }
     void setFloat(qreal val) { this->sval = qlonglong(val); }
     QString getString(void) const;
-    CalcStackItemInt& operator+=(const CalcStackItemInt& a) {
-        this->sval += a.sval;
-        return *this;
-    }
-    CalcStackItemInt& operator-=(const CalcStackItemInt& a) {
-        this->sval -= a.sval;
-        return *this;
-    }
-    CalcStackItemInt& operator-() {
-        this->sval = -this->sval;
-        return *this;
-    }
 protected:
     qlonglong sval;
     unsigned base;
@@ -72,52 +60,9 @@ public:
     // We could play around with precision/format, won't do that
     // for now (probably not needed anyway)
     QString getString(void) const;
-    CalcStackItemFloat& operator+=(const CalcStackItemFloat& a) {
-        this->val += a.val;
-        return *this;
-    }
-    CalcStackItemFloat& operator-=(const CalcStackItemFloat& a) {
-        this->val -= a.val;
-        return *this;
-    }
-    CalcStackItemFloat& operator-() {
-        this->val = -this->val;
-        return *this;
-    }
-    CalcStackItemFloat& operator+=(const CalcStackItemInt& a) {
-        this->val += qreal(a.sval);
-        return *this;
-    }
-    CalcStackItemFloat& operator-=(const CalcStackItemInt& a) {
-        this->val -= qreal(a.sval);
-        return *this;
-    }
 protected:
     real val;
 };
-
-// Arithmetic operators
-inline CalcStackItemInt operator+(CalcStackItemInt a, const CalcStackItemInt& b) {
-    return a += b;
-}
-inline CalcStackItemInt operator-(CalcStackItemInt a, const CalcStackItemInt& b) {
-    return a -= b;
-}
-inline CalcStackItemFloat operator+(CalcStackItemFloat a, const CalcStackItemFloat& b) {
-    return a += b;
-}
-inline CalcStackItemFloat operator-(CalcStackItemFloat a, const CalcStackItemFloat& b) {
-    return a -= b;
-}
-
-// Float +- Int => Float
-inline CalcStackItemFloat operator+(CalcStackItemFloat a, const CalcStackItemInt& b) {
-    return a += b;
-}
-inline CalcStackItemFloat operator-(CalcStackItemFloat a, const CalcStackItemInt& b) {
-    return a -= b;
-}
-
 
 
 #endif // CALCSTATEITEM_H

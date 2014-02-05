@@ -134,16 +134,16 @@ bool RPNParser::asmd(RPNParser* p, QString& s) {
         a = p->cstack->popItem();
 
         if(s == "+") {
-            status = CalcStackItem::add(&c,a,b);
+            c = CalcStackItem::add(a,b,&status);
         }
         else if(s == "-") {
-            status = CalcStackItem::sub(&c,a,b);
+            c = CalcStackItem::sub(a,b,&status);
         }
         else if(s == "*") {
-            status = CalcStackItem::mul(&c,a,b);
+            c = CalcStackItem::mul(a,b,&status);
         }
         else if(s == "/") {
-            status = CalcStackItem::div(&c,a,b);
+            c = CalcStackItem::div(a,b,&status);
         }
 
         if(status) {
