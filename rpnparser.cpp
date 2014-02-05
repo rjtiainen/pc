@@ -13,6 +13,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     conv,               // Convert (hex2dex, dec2hex)
     asmd,               // Add, multiply, subtract, divide
     hex,                // Input hex
+    bin,                // Input binary
     real,               // Input floating point
     integer,            // Input integer
     empty,              // Duplicate head of stack
@@ -104,7 +105,7 @@ bool RPNParser::conv(RPNParser *p, QString &s) {
     if(p->cstack->items() > 0 && p->cstack->top()->isInteger()) {
         CalcStackItem* a;
 
-        // Hex2Dec
+        // 2Dec
         if(s == "d") {
             a = p->cstack->popItem();
             CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 10);
@@ -112,10 +113,18 @@ bool RPNParser::conv(RPNParser *p, QString &s) {
             delete a;
             status=true;
         }
-        // Dec2Hex
+        // 2Hex
         else if(s == "h") {
             a = p->cstack->popItem();
             CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 16);
+            p->cstack->pushItem(b);
+            delete a;
+            status=true;
+        }
+        // 2Bin
+        else if(s == "b") {
+            a = p->cstack->popItem();
+            CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 2);
             p->cstack->pushItem(b);
             delete a;
             status=true;
@@ -127,7 +136,7 @@ bool RPNParser::conv(RPNParser *p, QString &s) {
 
 bool RPNParser::asmd(RPNParser* p, QString& s) {
     bool status = false;
-    CalcStackItem *a,*b,*c;
+    CalcStackItem *a,*b,*c=0;
 
     if((p->cstack->items()) > 1 && (s == "+" || s == "-" || s == "*" || s == "/")) {
         b = p->cstack->popItem();
@@ -169,6 +178,22 @@ bool RPNParser::hex(RPNParser *p, QString &s) {
         qlonglong i = s.toLongLong(&status, 16);
         if(status) {
             CalcStackItem* newItem = new CalcStackItemInt(i, 16);
+            p->cstack->pushItem(newItem);
+       }
+    }
+
+    return status;
+}
+
+bool RPNParser::bin(RPNParser *p, QString &s) {
+    bool status=false;
+
+    // Let 0b be case sensitive.
+    // toLongLong doesn't recognize the 0b, strip it.
+    if(s.count() > 2 && s.startsWith("0b")) {
+        qlonglong i = s.remove(0,2).toLongLong(&status, 2);
+        if(status) {
+            CalcStackItem* newItem = new CalcStackItemInt(i, 2);
             p->cstack->pushItem(newItem);
        }
     }

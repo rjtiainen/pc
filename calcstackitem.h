@@ -28,19 +28,19 @@ class CalcStackItemInt : public CalcStackItem
 {
 friend class CalcStackItemFloat;
 public:
-    CalcStackItemInt(qlonglong _val=0, unsigned _base=10) : CalcStackItem() {
-        sval = _val;
-        base = _base;
+    CalcStackItemInt(qlonglong val=0, unsigned base=10) : CalcStackItem() {
+        this->val = val;
+        this->base = base;
     }
     bool isInteger(void) const { return true; }
     unsigned getBase(void) const { return base; }
-    qlonglong getInteger(void) const { return sval; }
-    qreal getFloat(void) const { return qreal(sval); }
-    void setInteger(qlonglong val) { this->sval = val; }
-    void setFloat(qreal val) { this->sval = qlonglong(val); }
+    qlonglong getInteger(void) const { return val; }
+    qreal getFloat(void) const { return qreal(val); }
+    void setInteger(qlonglong val) { this->val = val; }
+    void setFloat(qreal val) { this->val = qlonglong(val); }
     QString getString(void) const;
 protected:
-    qlonglong sval;
+    qlonglong val;
     unsigned base;
 };
 
@@ -49,8 +49,8 @@ class CalcStackItemFloat : public CalcStackItem
 friend class CalcStackItemInt;
 public:
     typedef qreal real;
-    CalcStackItemFloat(qreal _val=0.0) : CalcStackItem() {
-        val = _val;
+    CalcStackItemFloat(qreal val=0.0) : CalcStackItem() {
+        this->val = val;
     }
     bool isFloat(void) const { return true; }
     qlonglong getInteger(void) const { return qlonglong(val); }

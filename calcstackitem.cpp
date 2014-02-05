@@ -5,10 +5,13 @@ QString CalcStackItemInt::getString(void) const {
     QString str="";
 
     if(base == 16) {
-        str="0x"+QString::number(sval, 16);
+        str="0x"+QString::number(val, 16);
+    }
+    else if(base == 2) {
+        str="0b"+QString::number(val, 2);
     }
     else {
-        str=QString::number(sval);
+        str=QString::number(val);
     }
 
     return str;

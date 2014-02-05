@@ -24,6 +24,7 @@ private:
     static bool conv(RPNParser* p, QString& s);
     static bool asmd(RPNParser* p, QString& s);
     static bool hex(RPNParser* p, QString& s);
+    static bool bin(RPNParser *p, QString &s);
     static bool real(RPNParser* p, QString& s);
     static bool integer(RPNParser* p, QString& s);
     static bool empty(RPNParser* p, QString& s);
