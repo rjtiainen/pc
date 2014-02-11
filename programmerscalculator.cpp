@@ -59,7 +59,11 @@ void ProgrammersCalculator::newInput(void) {
         qApp->exit(0);
     }
     else if(ui->inputEdit->text()==":lic") {
-        showLicense();
+        showText("COPYING");
+        ui->inputEdit->clear();
+    }
+    else if(ui->inputEdit->text()==":help") {
+        showText("README");
         ui->inputEdit->clear();
     }
     else {
@@ -105,20 +109,28 @@ void ProgrammersCalculator::updateDisplay(void) {
 // Show GPL text from the file COPYING. Installer copies
 // COPYING to the same directory as the executable.
 // todo: Write help file and use this routine to show it as well
-void ProgrammersCalculator::showLicense(void) {
+void ProgrammersCalculator::showText(const QString fileName) {
     QMainWindow* window = new QMainWindow(this);
     QTextEdit* textEdit = new QTextEdit(window);
-    QFile* file = new QFile("COPYING");
+    QFile* file = new QFile(fileName);
     file->open(QIODevice::ReadOnly);
-    QTextStream* stream = new QTextStream(file);
-    QString license = stream->readAll();
-    file->close();
+
     window->setCentralWidget(textEdit);
-    window->setWindowTitle("Programmer's Calculator -- License");
+    window->setWindowTitle("Programmer's Calculator -- " + fileName);
     QFont font("Monospace");
     font.setStyleHint(QFont::TypeWriter);
     textEdit->setFont(font);
-    textEdit->setText(license);
+
+    if(file->isOpen()) {
+        QTextStream* stream = new QTextStream(file);
+        QString license = stream->readAll();
+        file->close();
+        textEdit->setText(license);
+    }
+    else {
+        textEdit->setText("File "+fileName+" not found. Check your installation.");
+    }
+
     window->show();
     // Set the window width to 80 characters + a few pixel margin
     window->setMinimumWidth(textEdit->fontMetrics().width(QString("").leftJustified(80,'x')) + 40);

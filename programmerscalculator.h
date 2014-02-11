@@ -37,7 +37,7 @@ public:
     
 private:
     void updateDisplay(void);
-    void showLicense(void);
+    void showText(const QString fileName = "COPYING");
     Ui::ProgrammersCalculator *ui;
     Parser* parser;
     CalcStack* calcStack;
