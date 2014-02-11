@@ -1,0 +1,83 @@
+Programmer's Calculator
+Copyright 2014, Risto Tiainen
+Free software, licenced under GPLv3
+(See COPYING for details)
+
+0. Quick command list
+
+Commands are case sensitive.
+
+<enter>    Push a value or operator to the stack or execute a command. If the
+	   command is recognized and the preconditions are correct (enough data 
+           on stack, not dividing by zero etc.) the input line is cleared after 
+           pressing enter. 
++,-,*,/    The stuff that you'd expect. Integer operands result in an integer
+           result. One or more floating point operands give a float. When
+           calculating with differing bases, the topmost value in the stack
+           determines the base of the result.
+.          Decimal point. Denotes floating point number.
+0b         Prefix for binary integers
+0x         Prefix for hexadecimal integers
+b          Convert to binary integer.
+c          Clear the stack.
+d          Convert to decimal integer.
+h          Convert to hexadecimal integer.
+i          Invert (1/x) the topmost item of the stack. (Doesn't make much sense
+           for integers.)
+s          Swap two topmost items of the stack
+
+
+	
+
+1. Background
+
+I work with embedded systems, especially CAN-based communications. In my work, I
+often need to convert numbers between different bases, decimal and hexadecimal
+being the ones needed in practice. The calculator that comes with Windows is
+otherwise OK, but converting between bases requires either the use of the mouse,
+or recalling cumbersome keystroke combinations involving the function keys. I
+didn't find any other app, either, that would have been exactly what I needed.
+Therefore, I decided to write a simple app of my own with the stuff that I need
+neatly available and not much extra. Most importantly, the program should never
+ever require the use of the mouse. Programming, as I understand it, is done by
+typing with the keyboard, and lifting your hand to grab the mouse annoyingly
+interferes with your flow of work. Therefore, there aren't even any keys that
+you could go around clicking with the mouse.
+
+The calculator is stack-based and works with reverse Polish logic. The two
+reasons for this are me being used to working with HP calculators and RPN being
+easy to implement.
+
+2. Program overview
+
+There are three sections in the program window. The topmost white box will 
+always show the top of the stack in different formats (signed integer, unsigned 
+integer, hexadecimal, binary, and floating point. All of the fields are 64 bits 
+wide (which is something somebody sometime might not want, but so far, that's 
+not configurable). When entering an integer, the float value is garbage, and, 
+conversely, when entering a float, the integer fields will show bullshit. As 
+previously said, the program is mainly intended for use with integers, but the 
+floating point part is there to be able to do some basic calculations with the 
+same program. Of course, you can analyze how the floating point value you 
+entered is stored by the computer in memory.
+
+The second white box is the stack. The topmost item is on the top. Hexadecimal 
+numbers are shown with the 0x prefix, binary numbers with the 0b prefix, 
+floating point numbers contain the decimal point (.), and the rest are 
+considered signed integers. Floating point numbers support the "scientific" 
+notation, i.e. 1.e6 = 1000000.0. Integers don't understand this kind of notation 
+for now.
+
+The lowermost box is the input line. You can give commands, operators, or 
+numbers. These are detailed in the Command list section.
+
+3. TODO
+
+Planned yet unimplemented features
+
+- AND, OR, NOT operators
+- Remove top of stack
+- Shift left/right
+
+
+
