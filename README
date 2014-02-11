@@ -16,6 +16,9 @@ Commands are case sensitive.
            calculating with differing bases, the topmost value in the stack
            determines the base of the result.
 .          Decimal point. Denotes floating point number.
+:help      Show this file from the GUI
+:lic       Show the license (COPYING)
+:q         Quit the program
 0b         Prefix for binary integers
 0x         Prefix for hexadecimal integers
 b          Convert to binary integer.

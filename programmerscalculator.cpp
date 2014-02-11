@@ -37,8 +37,10 @@ ProgrammersCalculator::ProgrammersCalculator(QWidget *parent) :
 
     ui->radixListWidget->addItem("Programmer's Calculator");
     ui->radixListWidget->addItem("");
-    ui->radixListWidget->addItem("(C) 2013-2014 Risto Tiainen");
+    ui->radixListWidget->addItem("Copyright 2014, Risto Tiainen");
     ui->radixListWidget->addItem("Free software under the terms of GNU GPL V3");
+    ui->radixListWidget->addItem(":help<enter> gives the command list");
+    ui->radixListWidget->addItem(":lic<enter> gives the license");
     ui->inputEdit->setFocus();
 }
 
