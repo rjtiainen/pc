@@ -52,7 +52,7 @@ CalcStackItem* CalcStackItem::add(const CalcStackItem* a, const CalcStackItem* b
     CalcStackItem* res=0;
 
     if(a->isInteger() && b->isInteger()) {
-        res = new CalcStackItemInt(a->getInteger()+b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()+b->getInteger(), b->getBase());
     }
     else {
         res = new CalcStackItemFloat(a->getFloat()+b->getFloat());
@@ -70,7 +70,7 @@ CalcStackItem* CalcStackItem::sub(const CalcStackItem* a, const CalcStackItem* b
     CalcStackItem* res=0;
 
     if(a->isInteger() && b->isInteger()) {
-        res = new CalcStackItemInt(a->getInteger()-b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()-b->getInteger(), b->getBase());
     }
     else {
         res = new CalcStackItemFloat(a->getFloat()-b->getFloat());
@@ -88,7 +88,7 @@ CalcStackItem* CalcStackItem::mul(const CalcStackItem* a, const CalcStackItem* b
     CalcStackItem* res=0;
 
     if(a->isInteger() && b->isInteger()) {
-        res = new CalcStackItemInt(a->getInteger()*b->getInteger());
+        res = new CalcStackItemInt(a->getInteger()*b->getInteger(), b->getBase());
     }
     else {
         res = new CalcStackItemFloat(a->getFloat()*b->getFloat());
@@ -107,7 +107,7 @@ CalcStackItem* CalcStackItem::div(const CalcStackItem* a, const CalcStackItem* b
 
     if(a->isInteger() && b->isInteger()) {
         if(b->getInteger()!=0) {
-            res = new CalcStackItemInt(a->getInteger()/b->getInteger());
+            res = new CalcStackItemInt(a->getInteger()/b->getInteger(), b->getBase());
         }
     }
     else {
