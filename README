@@ -10,7 +10,8 @@ Commands are case sensitive.
 <enter>    Push a value or operator to the stack or execute a command. If the
 	   command is recognized and the preconditions are correct (enough data 
            on stack, not dividing by zero etc.) the input line is cleared after 
-           pressing enter. 
+           pressing enter. If the input line is empty, the topmost item in the 
+           stack is duplicated. 
 +,-,*,/    The stuff that you'd expect. Integer operands result in an integer
            result. One or more floating point operands give a float. When
            calculating with differing bases, the topmost value in the stack
@@ -27,10 +28,9 @@ d          Convert to decimal integer.
 h          Convert to hexadecimal integer.
 i          Invert (1/x) the topmost item of the stack. (Doesn't make much sense
            for integers.)
-s          Swap two topmost items of the stack
+p          Pop (remove) an item from the stack.
+s          Swap two topmost items of the stack.
 
-
-	
 
 1. Background
 
@@ -79,7 +79,6 @@ numbers. These are detailed in the Command list section.
 Planned yet unimplemented features
 
 - AND, OR, NOT operators
-- Remove top of stack
 - Shift left/right
 
 

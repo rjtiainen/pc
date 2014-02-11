@@ -50,7 +50,8 @@ ProgrammersCalculator::~ProgrammersCalculator()
 }
 
 void ProgrammersCalculator::newInput(void) {
-    bool status=parser->parse(ui->inputEdit->text());
+    QString retMsg = "";
+    bool status=parser->parse(ui->inputEdit->text(), retMsg);
 
     if(status) {
         ui->statusBar->clearMessage();
@@ -68,8 +69,11 @@ void ProgrammersCalculator::newInput(void) {
         showText("README");
         ui->inputEdit->clear();
     }
+    else if(retMsg=="") {
+        ui->statusBar->showMessage("Parse error.");
+    }
     else {
-        ui->statusBar->showMessage("Error.");
+        ui->statusBar->showMessage(retMsg);
     }
 }
 

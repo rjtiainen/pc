@@ -26,9 +26,11 @@ class RPNParser : public Parser
 {
 public:
     RPNParser(CalcStack* _cstack);
-    bool parse(const QString& in);
+    bool parse(const QString& in, QString& out);
 
-    typedef bool (*checkFunction)(RPNParser*, QString& s);
+    // S is the string to be parsed, err will be set if check recognized the
+    // function but was not able to perform the task (insufficient data etc.)
+    typedef bool (*checkFunction)(RPNParser* p, QString& s, QString& err);
 private:
     // List of functions to be called for every new input.
     // Must return true if the function was able to correctly handle the input,
@@ -36,16 +38,17 @@ private:
     static checkFunction f[];
 
     // Functions for the list
-    static bool clr(RPNParser* p, QString& s);
-    static bool swap(RPNParser* p, QString& s);
-    static bool inv(RPNParser* p, QString& s);
-    static bool conv(RPNParser* p, QString& s);
-    static bool asmd(RPNParser* p, QString& s);
-    static bool hex(RPNParser* p, QString& s);
-    static bool bin(RPNParser *p, QString &s);
-    static bool real(RPNParser* p, QString& s);
-    static bool integer(RPNParser* p, QString& s);
-    static bool empty(RPNParser* p, QString& s);
+    static bool clr(RPNParser* p, QString& s, QString& err);
+    static bool pop(RPNParser* p, QString& s, QString& err);
+    static bool swap(RPNParser* p, QString& s, QString& err);
+    static bool inv(RPNParser* p, QString& s, QString& err);
+    static bool conv(RPNParser* p, QString& s, QString& err);
+    static bool asmd(RPNParser* p, QString& s, QString& err);
+    static bool hex(RPNParser* p, QString& s, QString& err);
+    static bool bin(RPNParser *p, QString &s, QString& err);
+    static bool real(RPNParser* p, QString& s, QString& err);
+    static bool integer(RPNParser* p, QString& s, QString& err);
+    static bool empty(RPNParser* p, QString& s, QString& err);
 };
 
 #endif // RPNPARSER_H
