@@ -22,15 +22,18 @@ Commands are case sensitive.
 :q         Quit the program
 0b         Prefix for binary integers
 0x         Prefix for hexadecimal integers
+and        Binary AND
 b          Convert to binary integer.
 c          Clear the stack.
 d          Convert to decimal integer.
 h          Convert to hexadecimal integer.
 i          Invert (1/x) the topmost item of the stack. (Doesn't make much sense
            for integers.)
+not        Binary NOT (bit inverse)
+or         Binary OR
 p          Pop (remove) an item from the stack.
 s          Swap two topmost items of the stack.
-
+xor        Binary XOR
 
 1. Background
 
@@ -78,8 +81,7 @@ numbers. These are detailed in the Command list section.
 
 Planned yet unimplemented features
 
-- AND, OR, NOT operators
 - Shift left/right
-
+- Overflow detection/saturation
 
 

@@ -31,6 +31,8 @@ RPNParser::checkFunction RPNParser::f[] = {
     inv,                // Inverse
     conv,               // Convert (hex2dex, dec2hex)
     asmd,               // Add, multiply, subtract, divide
+    logopbin,           // Logical operators (binary i.e. taking two arguments)
+    logopun,            // Logical operators (unary)
     hex,                // Input hex
     bin,                // Input binary
     real,               // Input floating point
@@ -234,6 +236,85 @@ bool RPNParser::asmd(RPNParser* p, QString& s, QString &err) {
                 p->cstack->pushItem(b);
                 // The only reason for failure at this point is div by zero
                 err = emDivByZero;
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
+    return status;
+}
+
+bool RPNParser::logopbin(RPNParser* p, QString& s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*b,*c=0;
+
+    if(s == "and" || s == "or" || s == "xor") {
+        if(p->cstack->items() > 1) {
+            b = p->cstack->popItem();
+            a = p->cstack->popItem();
+
+            if(a->isInteger() && b->isInteger()) {
+                if(s == "and") {
+                    c = new CalcStackItemInt((a->getInteger() & b->getInteger()), b->getBase());
+                    status = true;
+                }
+                else if(s == "or") {
+                    c = new CalcStackItemInt((a->getInteger() | b->getInteger()), b->getBase());
+                    status = true;
+                }
+                else if(s == "xor") {
+                    c = new CalcStackItemInt((a->getInteger() ^ b->getInteger()), b->getBase());
+                    status = true;
+                }
+            }
+            else {
+                err = emMustBeInt;
+            }
+
+            if(status) {
+                p->cstack->pushItem(c);
+                // a and b are gone, free the memory
+                delete a;
+                delete b;
+            }
+            else {
+                // Could not compute, put the stuff back to the stack
+                p->cstack->pushItem(a);
+                p->cstack->pushItem(b);
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
+    return status;
+}
+
+bool RPNParser::logopun(RPNParser* p, QString& s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*c=0;
+
+    if(s == "not") {
+        if(p->cstack->items() > 0) {
+            a = p->cstack->popItem();
+
+            if(a->isInteger()) {
+                c = new CalcStackItemInt(~a->getInteger(), a->getBase());
+                status = true;
+            }
+            else {
+                err = emMustBeInt;
+            }
+
+            if(status) {
+                p->cstack->pushItem(c);
+                // a is gone, free the memory
+                delete a;
+            }
+            else {
+                // Could not compute, put the stuff back to the stack
+                p->cstack->pushItem(a);
             }
         }
         else {
