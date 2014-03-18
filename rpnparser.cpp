@@ -155,49 +155,32 @@ bool RPNParser::inv(RPNParser *p, QString &s, QString &err) {
 
 bool RPNParser::conv(RPNParser *p, QString &s, QString &err) {
     bool status=false;
+    CalcStackItem *a,*b;
 
     if(p->cstack->items() > 0) {
-        CalcStackItem* a;
-
         // 2Dec
         if(s == "d") {
-            if(p->cstack->top()->isInteger()) {
-                a = p->cstack->popItem();
-                CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 10);
-                p->cstack->pushItem(b);
-                delete a;
-                status=true;
-            }
-            else {
-                err = emMustBeInt;
-            }
+            a = p->cstack->popItem();
+            b = new CalcStackItemInt(a->getInteger(), 10);
+            status=true;
         }
         // 2Hex
         else if(s == "h") {
-            if(p->cstack->top()->isInteger()) {
-                a = p->cstack->popItem();
-                CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 16);
-                p->cstack->pushItem(b);
-                delete a;
-                status=true;
-            }
-            else {
-                err = emMustBeInt;
-            }
+            a = p->cstack->popItem();
+            b = new CalcStackItemInt(a->getInteger(), 16);
+            status=true;
         }
         // 2Bin
         else if(s == "b") {
-            if(p->cstack->top()->isInteger()) {
-                a = p->cstack->popItem();
-                CalcStackItem* b = new CalcStackItemInt(a->getInteger(), 2);
-                p->cstack->pushItem(b);
-                delete a;
-                status=true;
-            }
-            else {
-                err = emMustBeInt;
-            }
+            a = p->cstack->popItem();
+            b = new CalcStackItemInt(a->getInteger(), 2);
+            status=true;
         }
+    }
+
+    if(status) {
+        p->cstack->pushItem(b);
+        delete a;
     }
 
     return status;
