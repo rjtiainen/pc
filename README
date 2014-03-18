@@ -37,6 +37,14 @@ p          Pop (remove) an item from the stack.
 s          Swap two topmost items of the stack.
 xor        Binary XOR
 
+The following constants are recognized,
+
+e          Euler's number
+pi         Pi
+2pi        2*Pi
+s2         sqrt(2)
+s3         sqrt(3)
+
 1. Background
 
 I work with embedded systems, especially CAN-based communications. In my work, I

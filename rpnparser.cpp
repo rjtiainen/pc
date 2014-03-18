@@ -34,6 +34,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     logopbin,           // Logical operators (binary i.e. taking two arguments)
     logopun,            // Logical operators (unary)
     power,              // Exponentiation
+    constant,           // Various constants
     hex,                // Input hex
     bin,                // Input binary
     real,               // Input floating point
@@ -353,6 +354,42 @@ bool RPNParser::power(RPNParser *p, QString &s, QString &err) {
     return status;
 }
 
+bool RPNParser::constant(RPNParser *p, QString &s, QString &err) {
+    bool status=false;
+    qreal value;
+
+    // Constants with digits "enough" digits. If these are wrong,
+    // blame Wikipedia, not me.
+    if(s=="e") {
+        value = 2.718281828459045235360287471352662497757247093;
+        status = true;
+    }
+    else if(s=="pi") {
+        value = 3.141592653589793238462643383279502884197169399;
+        status = true;
+    }
+    else if(s=="2pi") {
+        value = 2.0*3.141592653589793238462643383279502884197169399;
+        status = "true";
+    }
+    // Square roots of 2 and 3, important for an electrical engineer
+    else if(s=="s2") {
+        value = 1.4142135623730950488016887242097;
+        status = true;
+    }
+    else if(s=="s3") {
+        value = 1.7320508075688772935274463415059;
+        status = true;
+    }
+
+    if(status) {
+        CalcStackItem* newItem = new CalcStackItemFloat(value);
+        p->cstack->pushItem(newItem);
+    }
+
+    return status;
+}
+
 bool RPNParser::hex(RPNParser *p, QString &s, QString &err) {
     bool status=false;
 
@@ -402,8 +439,6 @@ bool RPNParser::real(RPNParser *p, QString &s, QString &err) {
 bool RPNParser::integer(RPNParser* p, QString& s, QString& err) {
     bool status = false;
     qlonglong i = s.toLongLong(&status, 10);
-
-    //qDebug() << status;    // TEST
 
     if(status) {
         CalcStackItem* newItem = new CalcStackItemInt(i);
