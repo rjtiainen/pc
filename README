@@ -28,6 +28,7 @@ b          Convert to binary integer.
 c          Clear the stack.
 d          Convert to decimal integer.
 h          Convert to hexadecimal integer.
+f          Convert to floating point.
 i          Invert (1/x) the topmost item of the stack. (Doesn't make much sense
            for integers.)
 not        Binary NOT (bit inverse)

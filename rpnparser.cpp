@@ -176,6 +176,12 @@ bool RPNParser::conv(RPNParser *p, QString &s, QString &err) {
             b = new CalcStackItemInt(a->getInteger(), 2);
             status=true;
         }
+        // 2Float
+        else if(s == "f") {
+            a = p->cstack->popItem();
+            b = new CalcStackItemFloat(a->getFloat());
+            status=true;
+        }
     }
 
     if(status) {
