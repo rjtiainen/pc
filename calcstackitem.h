@@ -40,6 +40,8 @@ public:
     static CalcStackItem* sub(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
     static CalcStackItem* mul(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
     static CalcStackItem* div(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
+    // Exponentiation. Same notes as for above.
+    static CalcStackItem* pwr(const CalcStackItem* a, const CalcStackItem* b, bool* status = 0);
 };
 
 class CalcStackItemInt : public CalcStackItem

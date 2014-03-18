@@ -33,6 +33,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     asmd,               // Add, multiply, subtract, divide
     logopbin,           // Logical operators (binary i.e. taking two arguments)
     logopun,            // Logical operators (unary)
+    power,              // Exponentiation
     hex,                // Input hex
     bin,                // Input binary
     real,               // Input floating point
@@ -321,6 +322,45 @@ bool RPNParser::logopun(RPNParser* p, QString& s, QString &err) {
             err = emNoData;
         }
     }
+    return status;
+}
+
+// x^y. If either x or y is float, the result will be float.
+// Otherwise, it is an int.
+bool RPNParser::power(RPNParser *p, QString &s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*b,*c=0;
+
+    // Accept both ^ and ** as the exponentiation mark
+    // (^ is a bit annoying to produce on some kbd layouts, including mine)
+    if(s == "^" || s == "**") {
+        if(p->cstack->items() > 1) {
+            b = p->cstack->popItem();
+            a = p->cstack->popItem();
+
+            c = CalcStackItem::pwr(a,b,&status);
+
+            if(status) {
+                p->cstack->pushItem(c);
+                // a and b are gone, free the memory
+                delete a;
+                delete b;
+            }
+            else {
+                // Could not compute, put the stuff back to the stack
+                p->cstack->pushItem(a);
+                p->cstack->pushItem(b);
+                // The only reason for failure at this point is trying to do 0^0,
+                // which is not defined.
+                err = emNotDef;
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
+
+
     return status;
 }
 

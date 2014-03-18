@@ -46,6 +46,7 @@ private:
     static bool asmd(RPNParser* p, QString& s, QString& err);
     static bool logopbin(RPNParser* p, QString& s, QString& err);
     static bool logopun(RPNParser* p, QString& s, QString& err);
+    static bool power(RPNParser* p, QString& s, QString& err);
     static bool hex(RPNParser* p, QString& s, QString& err);
     static bool bin(RPNParser *p, QString &s, QString& err);
     static bool real(RPNParser* p, QString& s, QString& err);

@@ -16,6 +16,7 @@ Commands are case sensitive.
            result. One or more floating point operands give a float. When
            calculating with differing bases, the topmost value in the stack
            determines the base of the result.
+^,**       Exponentiation. Again int^int gives an int, others give a float.
 .          Decimal point. Denotes floating point number.
 :help      Show this file from the GUI
 :lic       Show the license (COPYING)

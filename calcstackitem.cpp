@@ -17,6 +17,7 @@
 // If not, see <http://www.gnu.org/licenses/>.
 
 #include <QString>
+#include <cmath>
 #include "calcstackitem.h"
 
 QString CalcStackItemInt::getString(void) const {
@@ -116,6 +117,29 @@ CalcStackItem* CalcStackItem::div(const CalcStackItem* a, const CalcStackItem* b
         // be for the purposes of division, either.
         if(b->getFloat() != 0.0) {
             res = new CalcStackItemFloat(a->getFloat()/b->getFloat());
+        }
+    }
+
+    if(status != 0) {
+        *status = (res!=0);
+    }
+
+    return res;
+}
+
+CalcStackItem* CalcStackItem::pwr(const CalcStackItem* a, const CalcStackItem* b, bool* status) {
+    CalcStackItem* res=0;
+
+    // int^int=int, otherwise float
+    // 0^0 is not defined, everything else is OK
+    if(a->isInteger() && b->isInteger()) {
+        if(a->getInteger() != 0 || b->getInteger() != 0) {
+            res = new CalcStackItemInt((qlonglong)(pow(a->getFloat(), b->getFloat())), b->getBase());
+        }
+    }
+    else {
+        if(a->getFloat() != 0.0 || b->getFloat() != 0.0) {
+            res = new CalcStackItemFloat(pow(a->getFloat(),b->getFloat()));
         }
     }
 
