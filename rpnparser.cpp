@@ -18,6 +18,7 @@
 
 #include "rpnparser.h"
 #include <QDebug>
+#include <cmath>
 
 // Check function table for the parser.
 // 1. Check for known functions and operators
@@ -34,6 +35,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     logopbin,           // Logical operators (binary i.e. taking two arguments)
     logopun,            // Logical operators (unary)
     power,              // Exponentiation
+    trig,               // Trigonometric functions
     constant,           // Various constants
     hex,                // Input hex
     bin,                // Input binary
@@ -49,6 +51,10 @@ static const QString emMustBeInt="Argument must be an integer.";
 static const QString emMustBeFloat="Argument must be real.";
 static const QString emNoData="Not enough data on stack.";
 static const QString emNotDef="Result not defined.";
+
+// Constants
+static const qreal f_pi = 3.1415926535897932384626433832795;
+static const qreal f_e = 2.7182818284590452353602874713527;
 
 RPNParser::RPNParser(CalcStack* _cstack)
 {
@@ -350,26 +356,81 @@ bool RPNParser::power(RPNParser *p, QString &s, QString &err) {
         }
     }
 
+    return status;
+}
+
+// A shitload of trigonometric stuff.
+bool RPNParser::trig(RPNParser *p, QString &s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*b;
+
+    if(s == "sin" || s == "asin" || s == "cos" || s == "acos" || s == "tan" || s == "atan" ||
+            s == "sind" || s == "asind" || s == "cosd" || s == "acosd" || s == "tand" || s == "atand") {
+        if(p->cstack->items() > 0) {
+            a = p->cstack->popItem();
+            b = new CalcStackItemFloat();
+
+            if(s == "sin" || s == "sind") {
+                b->setFloat(sin(a->getFloat()*(s == "sind"?f_pi/180.0:1.0)));
+                status = true;
+            }
+            else if(s == "asin" || s == "asind") {
+                b->setFloat((s=="asind"?180.0/f_pi:1.0)*asin(a->getFloat()));
+                status = true;
+            }
+            else if(s == "cos" || s == "cosd") {
+                b->setFloat(cos(a->getFloat()*(s == "cosd"?f_pi/180.0:1.0)));
+                status = true;
+            }
+            else if(s == "acos" || s == "acosd") {
+                b->setFloat((s=="acosd"?180.0/f_pi:1.0)*acos(a->getFloat()));
+                status = true;
+            }
+            // When cosine of the angle is zero, tangent is not defined.
+            // cmath handles this by givin a finite yet very large result, keep it
+            // that way (as cos(x) != 0.0 is pointless with floating point numbers).
+            else if(s == "tan" || s == "tand") {
+                b->setFloat(tan(a->getFloat()*(s == "tand"?f_pi/180.0:1.0)));
+                status = true;
+            }
+            else if(s == "atan" || s == "atand") {
+                b->setFloat((s=="atand"?180.0/f_pi:1.0)*atan(a->getFloat()));
+                status = true;
+            }
+
+            if(status) {
+                p->cstack->pushItem(b);
+                delete a;
+            }
+            else {
+                p->cstack->pushItem(a);
+                delete b;
+                err = emNotDef;
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
 
     return status;
+
 }
 
 bool RPNParser::constant(RPNParser *p, QString &s, QString &err) {
     bool status=false;
     qreal value;
 
-    // Constants with digits "enough" digits. If these are wrong,
-    // blame Wikipedia, not me.
     if(s=="e") {
-        value = 2.718281828459045235360287471352662497757247093;
+        value = f_e;
         status = true;
     }
     else if(s=="pi") {
-        value = 3.141592653589793238462643383279502884197169399;
+        value = f_pi;
         status = true;
     }
     else if(s=="2pi") {
-        value = 2.0*3.141592653589793238462643383279502884197169399;
+        value = 2.0*f_pi;
         status = "true";
     }
     // Square roots of 2 and 3, important for an electrical engineer

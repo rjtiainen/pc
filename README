@@ -8,7 +8,7 @@ Free software, licenced under GPLv3
 Commands are case sensitive.
 
 <enter>    Push a value or operator to the stack or execute a command. If the
-	   command is recognized and the preconditions are correct (enough data 
+           command is recognized and the preconditions are correct (enough data 
            on stack, not dividing by zero etc.) the input line is cleared after 
            pressing enter. If the input line is empty, the topmost item in the 
            stack is duplicated. 
@@ -23,9 +23,17 @@ Commands are case sensitive.
 :q         Quit the program
 0b         Prefix for binary integers
 0x         Prefix for hexadecimal integers
+acos       Arcus cosine (radians)
+acosd      Arcus cosine (degrees)
 and        Binary AND
+asin       Arcus sine (radians)
+asind      Arcus sine (degrees)
+atan       Arcus tangent (radians)
+acosd      Arcus tangent (degrees)
 b          Convert to binary integer.
 c          Clear the stack.
+cos        Cosine (radians)
+cosd       Cosine (degrees)
 d          Convert to decimal integer.
 h          Convert to hexadecimal integer.
 f          Convert to floating point.
@@ -35,6 +43,10 @@ not        Binary NOT (bit inverse)
 or         Binary OR
 p          Pop (remove) an item from the stack.
 s          Swap two topmost items of the stack.
+sin        Sine (radians)
+sind       Sine (degrees)
+tan        Tangent (radians)
+tand       Tangent (degrees)
 xor        Binary XOR
 
 The following constants are recognized,
