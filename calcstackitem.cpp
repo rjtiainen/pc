@@ -37,7 +37,8 @@ QString CalcStackItemInt::getString(void) const {
 }
 
 QString CalcStackItemFloat::getString(void) const {
-    QString s = QString::number(val);
+    // At least 15 digits should be correct when using double precision floating point
+    QString s = QString::number(val,'g',15);
     if(!s.contains('.')) {
         if(!s.contains('e')) {
             s.append(".0");

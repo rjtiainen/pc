@@ -108,7 +108,16 @@ void ProgrammersCalculator::updateDisplay(void) {
             }
         }
         ui->radixListWidget->addItem(str);
-        ui->radixListWidget->addItem(QString::number(data.f,'g'));
+
+        // Double precision can accurately represent at least 15 digits, but not many more,
+        // Show the number here justified to more or less the same length as the binary string
+        // above it, which is 4*8 digits + 3 spaces = 35 characters long. Find the accuracy at
+        // which the length of the resulting string is 35 chars or less.
+        unsigned prec=35;
+        while(QString::number(data.f,'g',prec).length() > 34) {
+            --prec;
+        }
+        ui->radixListWidget->addItem(QString::number(data.f,'g',prec));
     }
 }
 
