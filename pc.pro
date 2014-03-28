@@ -20,6 +20,7 @@ HEADERS  += programmerscalculator.h \
     parser.h \
     calcstack.h \
     rpnparser.h \
-    calcstackitem.h
+    calcstackitem.h \
+    version.h
 
 FORMS    += programmerscalculator.ui

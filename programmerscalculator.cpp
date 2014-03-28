@@ -18,17 +18,19 @@
 
 #include "programmerscalculator.h"
 #include "ui_programmerscalculator.h"
+#include "version.h"
 #include <QTextEdit>
 #include <QFontMetricsF>
 #include <QFile>
 #include <QDebug>
+
 
 ProgrammersCalculator::ProgrammersCalculator(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ProgrammersCalculator)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("Programmer\'s Calculator"));
+    this->setWindowTitle("Programmer\'s Calculator "+VERSIONGetVersion());
 
     calcStack = new CalcStack();
     parser = new RPNParser(calcStack);
