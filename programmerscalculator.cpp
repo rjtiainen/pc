@@ -22,6 +22,8 @@
 #include <QTextEdit>
 #include <QFontMetricsF>
 #include <QFile>
+#include <QClipboard>
+
 #include <QDebug>
 
 
@@ -55,8 +57,9 @@ void ProgrammersCalculator::newInput(void) {
     QString retMsg = "";
     bool status=parser->parse(ui->inputEdit->text(), retMsg);
 
+    ui->statusBar->clearMessage();
+
     if(status) {
-        ui->statusBar->clearMessage();
         updateDisplay();
         ui->inputEdit->clear();
     }
@@ -69,6 +72,12 @@ void ProgrammersCalculator::newInput(void) {
     }
     else if(ui->inputEdit->text()==":help") {
         showText("README");
+        ui->inputEdit->clear();
+    }
+    else if(ui->inputEdit->text()==":c") {
+        if(ui->stackListWidget->itemAt(0,0) != 0) {
+            QApplication::clipboard()->setText(ui->stackListWidget->itemAt(0,0)->text());
+        }
         ui->inputEdit->clear();
     }
     else if(retMsg=="") {

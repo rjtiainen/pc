@@ -18,6 +18,7 @@ Commands are case sensitive.
            determines the base of the result.
 ^,**       Exponentiation. Again int^int gives an int, others give a float.
 .          Decimal point. Denotes floating point number.
+:c         Copy top of the stack to the clipboard
 :help      Show this file from the GUI
 :lic       Show the license (COPYING)
 :q         Quit the program
