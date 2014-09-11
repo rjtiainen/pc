@@ -66,7 +66,8 @@ bool RPNParser::parse(const QString &in, QString &out) {
     bool status = false;
     QString s = in;
     checkFunction* fp = &f[0];
-    s.replace(" ","");  // Get rid of whitespace
+    s.replace(" ","");   // Get rid of whitespace
+    s.replace(",",".");  // I have comma in my numpad
 
     // Here be parsing algorithm
     // RPN is the easy one and even that is a bit of a bitch
