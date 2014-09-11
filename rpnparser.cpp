@@ -41,6 +41,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     bin,                // Input binary
     real,               // Input floating point
     integer,            // Input integer
+    scientific,         // Scientific notation
     empty,              // Duplicate head of stack
     (checkFunction)0    // terminator, do not remove
 };
@@ -506,6 +507,22 @@ bool RPNParser::integer(RPNParser* p, QString& s, QString& err) {
         p->cstack->pushItem(newItem);
     }
 
+    return status;
+}
+
+bool RPNParser::scientific(RPNParser* p, QString& s, QString& err) {
+    bool status = false;
+
+    // If there is exactly 1 e and the number is not hexadecimal,
+    // it may be scientific notation. Note that sc. notation numbers
+    // with a decimal point are already accepted in ::real()
+    if(s.count('e') == 1) {
+        qreal f = s.toDouble(&status);
+        if(status) {
+            CalcStackItem* newItem = new CalcStackItemFloat(f);
+            p->cstack->pushItem(newItem);
+        }
+    }
     return status;
 }
 
