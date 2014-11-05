@@ -48,6 +48,7 @@ p          Pop (remove) an item from the stack.
 s          Swap two topmost items of the stack.
 sin        Sine (radians)
 sind       Sine (degrees)
+sqr, sqrt  Square root
 tan        Tangent (radians)
 tand       Tangent (degrees)
 xor        Binary XOR

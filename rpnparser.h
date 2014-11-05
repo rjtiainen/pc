@@ -47,6 +47,7 @@ private:
     static bool logopbin(RPNParser* p, QString& s, QString& err);
     static bool logopun(RPNParser* p, QString& s, QString& err);
     static bool power(RPNParser* p, QString& s, QString& err);
+    static bool sqrt(RPNParser* p, QString& s, QString& err);
     static bool trig(RPNParser* p, QString& s, QString& err);
     static bool constant(RPNParser* p, QString& s, QString& err);
     static bool hex(RPNParser* p, QString& s, QString& err);

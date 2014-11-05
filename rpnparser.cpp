@@ -35,6 +35,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     logopbin,           // Logical operators (binary i.e. taking two arguments)
     logopun,            // Logical operators (unary)
     power,              // Exponentiation
+    sqrt,               // Square root
     trig,               // Trigonometric functions
     constant,           // Various constants
     hex,                // Input hex
@@ -52,6 +53,7 @@ static const QString emMustBeInt="Argument must be an integer.";
 static const QString emMustBeFloat="Argument must be real.";
 static const QString emNoData="Not enough data on stack.";
 static const QString emNotDef="Result not defined.";
+static const QString emCannotBeNegative="Argument cannot be negative.";
 
 // Constants
 static const qreal f_pi = 3.1415926535897932384626433832795;
@@ -351,6 +353,34 @@ bool RPNParser::power(RPNParser *p, QString &s, QString &err) {
                 // The only reason for failure at this point is trying to do 0^0,
                 // which is not defined.
                 err = emNotDef;
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
+
+    return status;
+}
+
+bool RPNParser::sqrt(RPNParser *p, QString &s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*b;
+
+    // Some people prefer sqr, others sqrt
+    if(s == "sqr" || s == "sqrt") {
+        if(p->cstack->items() > 0) {
+            a = p->cstack->popItem();
+
+            if(a->getFloat() >= 0.0) {
+                b = new CalcStackItemFloat(std::sqrt(a->getFloat()));
+                p->cstack->pushItem(b);
+                delete a;
+                status=true;
+            }
+            else {
+                p->cstack->pushItem(a);
+                err = emCannotBeNegative;
             }
         }
         else {
