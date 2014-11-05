@@ -58,6 +58,8 @@ static const QString emCannotBeNegative="Argument cannot be negative.";
 // Constants
 static const qreal f_pi = 3.1415926535897932384626433832795;
 static const qreal f_e = 2.7182818284590452353602874713527;
+static const qreal f_s2 = 1.4142135623730950488016887242097;
+static const qreal f_s3 = 1.7320508075688772935274463415059;
 
 RPNParser::RPNParser(CalcStack* _cstack)
 {
@@ -467,11 +469,20 @@ bool RPNParser::constant(RPNParser *p, QString &s, QString &err) {
     }
     // Square roots of 2 and 3, important for an electrical engineer
     else if(s=="s2") {
-        value = 1.4142135623730950488016887242097;
+        value = f_s2;
         status = true;
     }
     else if(s=="s3") {
-        value = 1.7320508075688772935274463415059;
+        value = f_s3;
+        status = true;
+    }
+    // Their inverses are sometimes also useful
+    else if(s=="is2") {
+        value = qreal(1.0)/f_s2;
+        status = true;
+    }
+    else if(s=="is3") {
+        value = qreal(1.0)/f_s3;
         status = true;
     }
 
