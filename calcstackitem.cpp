@@ -18,6 +18,7 @@
 
 #include <QString>
 #include <cmath>
+#include <complex>
 #include "calcstackitem.h"
 
 QString CalcStackItemInt::getString(void) const {
@@ -138,9 +139,18 @@ CalcStackItem* CalcStackItem::pwr(const CalcStackItem* a, const CalcStackItem* b
             res = new CalcStackItemInt((qlonglong)(pow(a->getFloat(), b->getFloat())), b->getBase());
         }
     }
+    // Float is a bit trickier, as some combinations yield complex results, which we
+    // don't support at the moment. Calculate as complex numbers and check whether
+    // the Im part equals zero. Equals sucks with floating point, I know, but I won't
+    // be writing anything more complex than plain == here. Use with caution...
     else {
         if(a->getFloat() != 0.0 || b->getFloat() != 0.0) {
-            res = new CalcStackItemFloat(pow(a->getFloat(),b->getFloat()));
+            std::complex<double> ac(double(a->getFloat()));
+            std::complex<double> bc(double(b->getFloat()));
+
+            if(std::pow(ac,bc).imag() == double(0.0)) {
+                res = new CalcStackItemFloat(pow(a->getFloat(),b->getFloat()));
+            }
         }
     }
 
