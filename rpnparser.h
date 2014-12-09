@@ -55,6 +55,7 @@ private:
     static bool real(RPNParser* p, QString& s, QString& err);
     static bool integer(RPNParser* p, QString& s, QString& err);
     static bool scientific(RPNParser* p, QString& s, QString& err);
+    static bool siprefix(RPNParser *p, QString &s, QString &err);
     static bool empty(RPNParser* p, QString& s, QString& err);
 };
 

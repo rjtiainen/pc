@@ -27,7 +27,7 @@ typedef struct {
     unsigned internal;
 } ProgramVersion;
 
-const ProgramVersion programVersion = {0, 6, 5};
+const ProgramVersion programVersion = {0, 6, 6};
 
 QString VERSIONGetVersion(void) {
     return QString::number(programVersion.major)+"."+QString::number(programVersion.minor)+"."+QString::number(programVersion.internal);

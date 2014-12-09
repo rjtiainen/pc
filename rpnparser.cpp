@@ -43,6 +43,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     real,               // Input floating point
     integer,            // Input integer
     scientific,         // Scientific notation
+    siprefix,           // SI prefixed floating point
     empty,              // Duplicate head of stack
     (checkFunction)0    // terminator, do not remove
 };
@@ -565,6 +566,34 @@ bool RPNParser::scientific(RPNParser* p, QString& s, QString& err) {
             p->cstack->pushItem(newItem);
         }
     }
+    return status;
+}
+
+bool RPNParser::siprefix(RPNParser* p, QString& s, QString& err) {
+    bool status = false;
+    // A qmap would be nicer but I don't know how to initialize it
+    // like this. Several qmap::insert()'s look even more stupid than this.
+    const struct { QString prefix; qreal scale; } prefixes[] = {
+        { "p", 1.0e-12},
+        { "n", 1.0e-9},
+        { "u", 1.0e-6},
+        { "m", 1.0e-3},
+        { "k", 1.0e3},
+        { "M", 1.0e6},
+        { "G", 1.0e9},
+        { "T", 1.0e12}
+    };
+
+    for(unsigned i=0;i<sizeof(prefixes)/sizeof(prefixes[0]);i++) {
+        if(s.endsWith(prefixes[i].prefix, Qt::CaseSensitive)) {
+            qreal f = s.left(s.length()-1).toDouble(&status);
+            if(status) {
+                CalcStackItem* newItem = new CalcStackItemFloat(f*prefixes[i].scale);
+                p->cstack->pushItem(newItem);
+            }
+        }
+    }
+
     return status;
 }
 
