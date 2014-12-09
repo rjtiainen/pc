@@ -98,7 +98,9 @@ numbers are shown with the 0x prefix, binary numbers with the 0b prefix,
 floating point numbers contain the decimal point (.), and the rest are 
 considered signed integers. Floating point numbers support the "scientific" 
 notation, i.e. 1.e6 = 1000000.0. Even if there is no decimal point, the number
-is interpreted as an integer (e.g. 1e6 = 1.e6).
+is interpreted as an integer (e.g. 1e6 = 1.e6). Some SI prefixes are supported,
+namely p (pico), n (nano), u (micro), m (milli), k (kilo), M (mega), G (giga),
+T (tera), so that e.g. 100n can be entered instead of 100e-9.
 
 The lowermost box is the input line. You can give commands, operators, or 
 numbers. These are detailed in the Command list section.
