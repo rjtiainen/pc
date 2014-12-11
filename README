@@ -56,6 +56,8 @@ xor        Binary XOR
 The following constants are recognized,
 
 e          Euler's number
+is2        1/sqrt(2)
+is3        1/sqrt(3)
 pi         Pi
 2pi        2*Pi
 s2         sqrt(2)
@@ -104,12 +106,5 @@ T (tera), so that e.g. 100n can be entered instead of 100e-9.
 
 The lowermost box is the input line. You can give commands, operators, or 
 numbers. These are detailed in the Command list section.
-
-3. TODO
-
-Planned yet unimplemented features
-
-- Shift left/right
-- Overflow detection/saturation
 
 
