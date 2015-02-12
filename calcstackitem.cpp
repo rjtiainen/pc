@@ -1,6 +1,6 @@
 // Programmer's Calculator
 //
-// Copyright 2014, Risto Tiainen
+// Copyright 2014-2015, Risto Tiainen
 //
 // Programmer's Calculator is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public License

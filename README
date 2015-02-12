@@ -17,6 +17,7 @@ Commands are case sensitive.
            calculating with differing bases, the topmost value in the stack
            determines the base of the result.
 ^,**       Exponentiation. Again int^int gives an int, others give a float.
+++         Add everything that is on the stack collapsing the stack. 
 .          Decimal point. Denotes floating point number. Comma is also
            recognized as the decimal separator, but it is converted into a
            point when entered.

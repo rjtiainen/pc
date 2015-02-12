@@ -1,6 +1,6 @@
 // Programmer's Calculator
 //
-// Copyright 2014, Risto Tiainen
+// Copyright 2014-2015, Risto Tiainen
 //
 // Programmer's Calculator is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public License
@@ -44,6 +44,7 @@ private:
     static bool inv(RPNParser* p, QString& s, QString& err);
     static bool conv(RPNParser* p, QString& s, QString& err);
     static bool asmd(RPNParser* p, QString& s, QString& err);
+    static bool plusplus(RPNParser* p, QString& s, QString& err);
     static bool logopbin(RPNParser* p, QString& s, QString& err);
     static bool logopun(RPNParser* p, QString& s, QString& err);
     static bool power(RPNParser* p, QString& s, QString& err);

@@ -1,6 +1,6 @@
 // Programmer's Calculator
 //
-// Copyright 2014, Risto Tiainen
+// Copyright 2014-2015, Risto Tiainen
 //
 // Programmer's Calculator is free software: you can redistribute it
 // and/or modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     inv,                // Inverse
     conv,               // Convert (hex2dex, dec2hex)
     asmd,               // Add, multiply, subtract, divide
+    plusplus,           // Add all items in the stack
     logopbin,           // Logical operators (binary i.e. taking two arguments)
     logopun,            // Logical operators (unary)
     power,              // Exponentiation
@@ -246,6 +247,34 @@ bool RPNParser::asmd(RPNParser* p, QString& s, QString &err) {
             err = emNoData;
         }
     }
+    return status;
+}
+
+// Add everything that is in the stack
+bool RPNParser::plusplus(RPNParser* p, QString& s, QString &err) {
+    bool status = false;
+    CalcStackItem *a,*b,*c=0;
+
+    if(s == "++") {
+        if(p->cstack->items() > 1) {
+            do {
+                b = p->cstack->popItem();
+                a = p->cstack->popItem();
+
+                c = CalcStackItem::add(a,b,&status);
+
+                p->cstack->pushItem(c);
+
+                delete a;
+                delete b;
+            } while(p->cstack->items() > 1);
+            status=true;
+        }
+        else {
+            err = emNoData;
+        }
+    }
+
     return status;
 }
 
@@ -619,3 +648,4 @@ bool RPNParser::empty(RPNParser *p, QString &s, QString &err) {
 
     return status;
 }
+
