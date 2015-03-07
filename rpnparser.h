@@ -58,6 +58,7 @@ private:
     static bool scientific(RPNParser* p, QString& s, QString& err);
     static bool siprefix(RPNParser *p, QString &s, QString &err);
     static bool empty(RPNParser* p, QString& s, QString& err);
+    static bool ashift(RPNParser *p, QString &s, QString &err);
 };
 
 #endif // RPNPARSER_H
