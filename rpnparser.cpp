@@ -68,23 +68,43 @@ RPNParser::RPNParser(CalcStack* _cstack)
     cstack = _cstack;
 }
 
-bool RPNParser::parse(const QString &in, QString &out) {
+bool RPNParser::parse(const QString &in, QString &out, QString& remaining) {
     bool status = false;
     QString s = in;
     checkFunction* fp = &f[0];
-    s.replace(" ","");   // Get rid of whitespace
+
     s.replace(",",".");  // I have comma in my numpad
+
+    QStringList slist = s.split(" ", QString::SkipEmptyParts);
+    QStringList remainingList;
 
     // Here be parsing algorithm
     // RPN is the easy one and even that is a bit of a bitch
-    while(*fp != (checkFunction)0) {
-        if((*fp)(this,s,out)) {
-            status=true;
-            break;
+    for (int i = 0; i < slist.size(); ++i) {
+        bool found = false;
+
+        fp = &f[0];
+        while(*fp != (checkFunction)0) {
+	    QString curs = slist.at(i);
+	    if((*fp)(this,curs,out)) {
+                found=true;
+                break;
+            }
+            fp++;
         }
-        fp++;
+	if (!found) {
+	    for (int j = i; j < slist.size(); j++) {
+	      remainingList.append(slist.at(j));
+	    }
+            status=false;
+	    break;
+	}
+	else {
+	    status = true;
+	}
     }
 
+    remaining = remainingList.join(" ");
     return status;
 }
 

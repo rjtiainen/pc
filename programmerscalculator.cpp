@@ -55,12 +55,13 @@ ProgrammersCalculator::~ProgrammersCalculator()
 
 void ProgrammersCalculator::newInput(void) {
     QString retMsg = "";
-    bool status=parser->parse(ui->inputEdit->text(), retMsg);
+    QString remaining = "";
+    bool status=parser->parse(ui->inputEdit->text(), retMsg, remaining);
 
     ui->statusBar->clearMessage();
+    updateDisplay();
 
     if(status) {
-        updateDisplay();
         ui->inputEdit->clear();
     }
     else if(ui->inputEdit->text()==":q") {
@@ -82,9 +83,11 @@ void ProgrammersCalculator::newInput(void) {
     }
     else if(retMsg=="") {
         ui->statusBar->showMessage("Parse error.");
+        ui->inputEdit->setText(remaining);
     }
     else {
         ui->statusBar->showMessage(retMsg);
+        ui->inputEdit->setText(remaining);
     }
 }
 
