@@ -46,6 +46,7 @@ RPNParser::checkFunction RPNParser::f[] = {
     scientific,         // Scientific notation
     siprefix,           // SI prefixed floating point
     empty,              // Duplicate head of stack
+    ashift,             // Arithmethic shift
     (checkFunction)0    // terminator, do not remove
 };
 
@@ -649,3 +650,46 @@ bool RPNParser::empty(RPNParser *p, QString &s, QString &err) {
     return status;
 }
 
+bool RPNParser::ashift(RPNParser *p, QString &s, QString &err) {
+    bool status = false;
+
+    if(s == "<<" || s == ">>") {
+        if(p->cstack->items() > 1) {
+            CalcStackItem *a,*b, *c=0;
+            b = p->cstack->popItem();
+            a = p->cstack->popItem();
+
+	    if (a->isInteger() && b->isInteger()) {
+
+	        if (s == "<<") {
+		    c = new CalcStackItemInt(a->getInteger()<<b->getInteger(), a->getBase());
+                    status = true;
+	        }
+	        else {
+		    c = new CalcStackItemInt(a->getInteger()>>b->getInteger(), a->getBase());
+                    status = true;
+	        }
+	    }
+            else {
+                err = emMustBeInt;
+            }
+
+	    if (status) {
+		p->cstack->pushItem(c);
+                // a and b are gone, free the memory
+                delete a;
+                delete b;
+	    }
+            else {
+                // Could not compute, put the stuff back to the stack
+                p->cstack->pushItem(a);
+                p->cstack->pushItem(b);
+            }
+        }
+        else {
+            err = emNoData;
+        }
+    }
+
+    return status;
+}
