@@ -26,7 +26,7 @@ class RPNParser : public Parser
 {
 public:
     RPNParser(CalcStack* _cstack);
-    bool parse(const QString& in, QString& out);
+    bool parse(const QString& in, QString& out, QString& remaining);
 
     // S is the string to be parsed, err will be set if check recognized the
     // function but was not able to perform the task (insufficient data etc.)

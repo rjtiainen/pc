@@ -26,7 +26,7 @@ class Parser {
 public:
     // Parser owns the calc stack and is responsible for pushing and popping
     // stuff into it. Main program handles displaying the stack.
-    virtual bool parse(const QString& in, QString& out) = 0;
+  virtual bool parse(const QString& in, QString& out, QString& remaining) = 0;
 protected:
     CalcStack* cstack;
 };
